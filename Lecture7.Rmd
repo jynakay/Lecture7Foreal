@@ -1,0 +1,103 @@
+---
+title: "Lecture7Foreal"
+author: "Vicki Hertzberg"
+date: "February 17, 2017"
+output: html_document
+---
+
+First let's call up the data. 
+
+```{r}
+# read in the pesticide dataset
+library(readr)
+library(tidyverse)
+Pesticides <- read_csv("Pesticides.csv")
+
+
+# read in the links to county and state names
+ag_dict <- read_csv("ag-dict.csv")
+
+```
+
+Let's see what is in the Pesticides dataset:
+
+```{r}
+summary(Pesticides)
+```
+
+This dataset is estimated amounts of pesticide applied by county by state in 2014. The variables LOW_ESTIMATE and HIGH_ESTIMATE are estimated amounts of the pesticide named in that row applied in that county of that state in 2014. Let's create a new variable, the average estimate.
+
+```{r}
+Pesticides$AVG_ESTIMATE <- (Pesticides$LOW_ESTIMATE + Pesticides$HIGH_ESTIMATE)/2
+summary(Pesticides)
+```
+
+
+The Girasoles (Sunflower) study is assessing the health of agricultural workers in Florida (STATE_CODE 12). The cities where we have worked to date are Pierson, Apopka, Immokalee, and Felsmere, which are located in Volusia, Orange, Collier, and Indian River Counties respectively. The county codes are 127, 945, 21, and 61 respectively. 
+
+Today we are talking a bit more about the `grammars` of R, specifically, the grammar of graphics, and the grammar of data wrangling.
+
+That brilliant rascal, Hadley Wickham, is responsible for both of these grammars. 
+
+First, the grammar of data wrangling (or More with `dplyr` from `tidyverse`).
+
+There are five "verbs" for data wrangling. These are as follows:
+
+- select() ====>>> This will take a subset of columns (i.e., features or variables)
+- filter() ====>>> This will take a subset of rows (i.e., observations)
+- mutate() ====>>> This will add or modify existing columns
+- arrange() ====>>> This will sort the rows
+- summarize() ===>>> This will aggregate data across rows (e.g., group it according to some criteria)
+
+Each of these functions takes a data frame as its first argument, and returns a data frame. So these are pretty powerful functions, allowing you to slice and dice your way through a data table. 
+
+It is said that Hadley Wickham created these "verbs" in an inspiration to blur the boundaries between R and SQL, a relational database querying language. 
+
+-------
+
+The two simplest of these commands are select() and filter(). These allow you to return only a subset of columns or rows in a data frame. 
+
+
+To demonstrate, let's grab the chunk of the dataset that is only the pesticide Atrazine applied in the state of Florida. We already know that Florida has STATE_CODE of 12, so first let's just grab the columns we want, COMPOUND, STATE_CODE, and AVG_ESTIMATE.
+
+```{r}
+pesticide_subset <- select(Pesticides, COMPOUND, STATE_CODE, AVG_ESTIMATE)
+```
+
+Now let's get Florida only:
+```{r}
+FL_subset <- filter(pesticide_subset, STATE_CODE == 12)
+```
+
+And now let's get Atrazine only:
+
+```{r}
+FL_Atrazine <- filter(FL_subset, COMPOUND == "Atrazine")
+```
+
+Why don't you try this with data from the state of Georgia (with state code 13)? Specifically, the governor is interested in the amount of glyphosate (aka "Round-up") applied in 2014. How would you do this? Fill in the following R chunk. In this case, look for COMPOUND with name "Atrazine".
+
+```{r}
+
+```
+
+Note that in the way that we have sequenced these operations, the filter() operation is *nested* within the select() operation. We could just as easily reversed the order, nesting select() within filter(). Another way to think of this maneuver is that these operations are "chained" together in a "pipeline". The symbol for "piping"is %>%, in which the value returned from the first operation is the input for the second operation, etc.
+
+For instance, instead of 3 different steps above, we can do this in effectively one line of code as follows:
+
+```{r}
+FL_Atrazine_new <- Pesticides %>% select(COMPOUND, STATE_CODE, AVG_ESTIMATE) %>% filter(STATE_CODE == 12 & COMPOUND == "Atrazine")
+```
+ 
+Let's try that out for the Georgia data now. How would you write one line of code for the R chunk?
+
+```{r}
+
+```
+
+The mutate() and rename() functions allow us to cerate, redefine, and rename our variables. 
+
+*Melinda, I am stopping here but intend to get through this and some ggplot examples. Or do you want to do the ggplot and I will just finish with dplyr?*
+
+*Things I still have to cover: mutate(), rename(), arrange(), and summarize() with group_by(), also joins (inner and outer) and wide v narrow data.*
+
