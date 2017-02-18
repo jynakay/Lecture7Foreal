@@ -1,11 +1,6 @@
----
-title: "N741: Lecture 7 Data and Code Wrangling"
-author: "Vicki Hertzberg and Melinda Higgins"
-date: "February 17, 2017"
-output: 
-  html_document:
-    keep_md: true
----
+# N741: Lecture 7 Data and Code Wrangling
+Vicki Hertzberg and Melinda Higgins  
+February 17, 2017  
 
 ## Markdown Document Begins
 
@@ -13,9 +8,39 @@ Let's look at your "environment" at the beginning of the R Markdown document (RM
 
 Also let's see what the RMD file "sees" in your "Global Environment" - this question is itself incorrect, since when the "KNIT" process begins a new "environment" is actually created with an empty data space (no objects), which is why no packages beyond those in base R are available. We'll run the `ls()` command to "list" the objects that the RMD file can "see" along the steps below.
 
-```{r}
+
+```r
 sessionInfo()
+```
+
+```
+## R version 3.3.2 (2016-10-31)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 14393)
+## 
+## locale:
+## [1] LC_COLLATE=English_United States.1252 
+## [2] LC_CTYPE=English_United States.1252   
+## [3] LC_MONETARY=English_United States.1252
+## [4] LC_NUMERIC=C                          
+## [5] LC_TIME=English_United States.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## loaded via a namespace (and not attached):
+##  [1] backports_1.0.4 magrittr_1.5    rprojroot_1.1   tools_3.3.2    
+##  [5] htmltools_0.3.5 yaml_2.1.14     Rcpp_0.12.8     stringi_1.1.2  
+##  [9] rmarkdown_1.3   knitr_1.15.1    stringr_1.1.0   digest_0.6.10  
+## [13] evaluate_0.10
+```
+
+```r
 ls()
+```
+
+```
+## character(0)
 ```
 
 Notice that there are 4 parts to the `sessionInfo()` output:
@@ -31,9 +56,59 @@ Let's load the packages we need and run the `sessionInfo()` command again and co
 
 Let's "load" `tidyverse` and see how this impacts the `sessionInfo()`.
 
-```{r}
+
+```r
 library(tidyverse)
+```
+
+```
+## Loading tidyverse: ggplot2
+## Loading tidyverse: tibble
+## Loading tidyverse: tidyr
+## Loading tidyverse: readr
+## Loading tidyverse: purrr
+## Loading tidyverse: dplyr
+```
+
+```
+## Conflicts with tidy packages ----------------------------------------------
+```
+
+```
+## filter(): dplyr, stats
+## lag():    dplyr, stats
+```
+
+```r
 sessionInfo()
+```
+
+```
+## R version 3.3.2 (2016-10-31)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 14393)
+## 
+## locale:
+## [1] LC_COLLATE=English_United States.1252 
+## [2] LC_CTYPE=English_United States.1252   
+## [3] LC_MONETARY=English_United States.1252
+## [4] LC_NUMERIC=C                          
+## [5] LC_TIME=English_United States.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] dplyr_0.5.0      purrr_0.2.2.9000 readr_1.0.0      tidyr_0.6.0     
+## [5] tibble_1.2-12    ggplot2_2.2.0    tidyverse_1.0.0 
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.8      knitr_1.15.1     magrittr_1.5     munsell_0.4.3   
+##  [5] colorspace_1.2-6 R6_2.1.3         stringr_1.1.0    plyr_1.8.4      
+##  [9] tools_3.3.2      grid_3.3.2       gtable_0.2.0     DBI_0.5         
+## [13] htmltools_0.3.5  yaml_2.1.14      lazyeval_0.2.0   rprojroot_1.1   
+## [17] digest_0.6.10    assertthat_0.1   evaluate_0.10    rmarkdown_1.3   
+## [21] stringi_1.1.2    scales_0.4.1     backports_1.0.4
 ```
 
 Now you get a 5th category in the `sessionInfo()` listing "other attached packages". So, you can now see that by loading `tidyverse` we have greatly expanded the functionality now available. `tidyverse` has now added:
@@ -71,27 +146,92 @@ AND let's run `ls()` again so you see that we now have 2 objects in our "environ
 * `Pesticides` and
 * `ag_dict`
 
-```{r}
+
+```r
 # read in the pesticide dataset
 Pesticides <- read_csv("Pesticides.csv")
+```
 
+```
+## Parsed with column specification:
+## cols(
+##   COMPOUND = col_character(),
+##   YEAR = col_integer(),
+##   STATE_CODE = col_integer(),
+##   COUNTY_CODE = col_integer(),
+##   LOW_ESTIMATE = col_double(),
+##   HIGH_ESTIMATE = col_double()
+## )
+```
+
+```r
 # look at head() of dataset
 # notice it is listed as a "tibble"
 # this is from tidyverse
 head(Pesticides)
+```
 
+```
+## # A tibble: 6 × 6
+##   COMPOUND  YEAR STATE_CODE COUNTY_CODE LOW_ESTIMATE HIGH_ESTIMATE
+##      <chr> <int>      <int>       <int>        <dbl>         <dbl>
+## 1    2_4_D  2014          1           1       1698.6        1885.5
+## 2    2_4_D  2014          1           3       7513.6        8472.4
+## 3    2_4_D  2014          1           5       2613.6        2889.4
+## 4    2_4_D  2014          1           7       1259.2        1277.7
+## 5    2_4_D  2014          1           9       7590.5        7756.1
+## 6    2_4_D  2014          1          11       1318.9        1408.5
+```
+
+```r
 # read in the links to county and state names
 ag_dict <- read_csv("ag-dict.csv")
+```
 
+```
+## Parsed with column specification:
+## cols(
+##   STATE_CODE = col_integer(),
+##   COUNTY_CODE = col_integer(),
+##   COUNTY = col_character(),
+##   STATE = col_character()
+## )
+```
+
+```r
 ls()
+```
+
+```
+## [1] "ag_dict"    "Pesticides"
 ```
 
 ## Summary of the Data
 
 Let's run a `summary()` of the variables in the Pesticides dataset:
 
-```{r}
+
+```r
 summary(Pesticides)
+```
+
+```
+##    COMPOUND              YEAR        STATE_CODE     COUNTY_CODE   
+##  Length:392433      Min.   :2014   Min.   : 1.00   Min.   :  1.0  
+##  Class :character   1st Qu.:2014   1st Qu.:19.00   1st Qu.: 35.0  
+##  Mode  :character   Median :2014   Median :29.00   Median : 77.0  
+##                     Mean   :2014   Mean   :30.73   Mean   : 94.6  
+##                     3rd Qu.:2014   3rd Qu.:45.00   3rd Qu.:129.0  
+##                     Max.   :2014   Max.   :56.00   Max.   :810.0  
+##                                                                   
+##   LOW_ESTIMATE     HIGH_ESTIMATE    
+##  Min.   :      0   Min.   :      0  
+##  1st Qu.:      1   1st Qu.:      2  
+##  Median :     12   Median :     16  
+##  Mean   :   1534   Mean   :   1225  
+##  3rd Qu.:    134   3rd Qu.:    142  
+##  Max.   :5507146   Max.   :5507146  
+##  NA's   :119027
 ```
 
 This dataset is estimated amounts of different pesticides (388 compounds) applied **by county** and **by state** in 2014. 
@@ -100,11 +240,17 @@ This dataset is estimated amounts of different pesticides (388 compounds) applie
 
 The variables LOW_ESTIMATE and HIGH_ESTIMATE are estimated amounts of the pesticide named in that row applied in that county of that state in 2014. Let's **create a new variable**, the average estimate and get a summary.
 
-```{r}
+
+```r
 Pesticides$AVG_ESTIMATE <- 
   (Pesticides$LOW_ESTIMATE + Pesticides$HIGH_ESTIMATE)/2
 
 summary(Pesticides$AVG_ESTIMATE)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+##       0       2      22    1598     190 5507000  119027
 ```
 
 ## The "Grammar" of Data Wrangling
@@ -140,7 +286,8 @@ The two simplest of these commands are `select()` and `filter()`. These allow yo
 
 To demonstrate, let's grab the chunk of the dataset that is only the pesticide Atrazine applied in the state of Florida. We already know that Florida has STATE_CODE of 12, so first let's just grab the columns we want, COMPOUND, STATE_CODE, and AVG_ESTIMATE (i.e. keep 3 columns). We can use the `dim()` command to get the number of rows and columns for each new data object created.
 
-```{r}
+
+```r
 # dplyr::select() selects columns you want to keep
 pesticide_subset <- select(Pesticides, 
                            COMPOUND, 
@@ -149,9 +296,14 @@ pesticide_subset <- select(Pesticides,
 dim(pesticide_subset)
 ```
 
+```
+## [1] 392433      3
+```
+
 Now let's get Florida only (keep only the rows for Florida):
 
-```{r}
+
+```r
 # dplyr::filter() selects the rows you want
 # notice we are using a LOGICAL argument
 # STATE_CODE == 12 as our filter
@@ -160,19 +312,29 @@ FL_subset <- filter(pesticide_subset,
 dim(FL_subset)
 ```
 
+```
+## [1] 9167    3
+```
+
 And now let's get Atrazine only rows:
 
-```{r}
+
+```r
 FL_Atrazine <- filter(FL_subset, 
                       COMPOUND == "Atrazine")
 dim(FL_Atrazine)
+```
+
+```
+## [1] 60  3
 ```
 
 ## EXERCISE FOR YOU TO TRY
 
 Why don't you try this with data from the state of Georgia (with state code 13)? Specifically, the governor is interested in the amount of glyphosate (aka "Round-up") applied in 2014. How would you do this? Fill in the following R chunk. In this case, look for COMPOUND with name "Glyphosate" with a capital "G".
 
-```{r}
+
+```r
 # TRY IN CLASS
 ```
 
@@ -182,13 +344,19 @@ Note that in the way that we have sequenced these operations, the `filter()` ope
 
 For instance, instead of 3 different steps above, we can do this in effectively one line of code as follows shown below. This can be read as "take the Pesticides dataset" THEN select 3 variables (columns) THEN filter out only the cases (rows) for Florida (STATE_CODE=12) and Atrazine (COMPOUND).
 
-```{r}
+
+```r
 FL_Atrazine_new <- Pesticides %>% 
   select(COMPOUND, STATE_CODE, AVG_ESTIMATE) %>%
   filter(STATE_CODE == 12 & COMPOUND == "Atrazine")
 
 # run summary of this data
 summary(FL_Atrazine_new$AVG_ESTIMATE)
+```
+
+```
+##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+##      0.5     84.2    399.6  10700.0   1164.0 447100.0
 ```
  
 ## Let's make a histogram of Atrazine Use in FL in 2014
@@ -199,26 +367,45 @@ As we make this plot - we'll walk through the "Grammar of Graphics" `ggplot2` sy
 
 ### Step 1 - initialize the graphical environment
 
-```{r}
+
+```r
 ggplot(data=FL_Atrazine_new)
 ```
+
+![](Lecture7_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
 ### Step 2 - add a "geom" geometric object for histogram
 
 As we saw looking at the summary stats above, the data is really skewed with some possible outliers (really high levels). So, we'll use a `log10()` transform of the data to help "normalize" the levels. NOTE: The minimum value was small but was > 0. Remember log(0) is not a number so if you have true 0's in your data do not use a log-transform.
 
-```{r}
+
+```r
 ggplot(data=FL_Atrazine_new) +
   geom_histogram(aes(log10(AVG_ESTIMATE)))
 ```
 
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![](Lecture7_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+
 ### Step 3 - add a title
 
-```{r}
+
+```r
 ggplot(data=FL_Atrazine_new) +
   geom_histogram(aes(log10(AVG_ESTIMATE))) +
   ggtitle("Atrazine Levels Used in FL During 2014")
+```
 
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![](Lecture7_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+
+```r
 # we could also do this using pipes %>%
 FL_Atrazine_new %>%
   ggplot() + 
@@ -226,11 +413,18 @@ FL_Atrazine_new %>%
   ggtitle("Atrazine Levels Used in FL During 2014")
 ```
 
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![](Lecture7_files/figure-html/unnamed-chunk-13-2.png)<!-- -->
+
 ### Suppose we put it all into 1 long process
 
 Most of the above code could be condensed using pipes `%>%`. The biggest advantage is you can easily see how we started with the original Pesticides dataset, selected variables of interest, filtered out the rows we wanted, and then made a histogram using the `ggplot2` approach.
 
-```{r}
+
+```r
 # we could actually do all of the 
 # multiple code steps above using pipes %>%
 
@@ -242,11 +436,18 @@ Pesticides %>%
   ggtitle("Atrazine Levels Used in FL During 2014")
 ```
 
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![](Lecture7_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+
 ## EXERCISE FOR YOU TO TRY 
  
 Let's modify the code above for Georgia's (STATE_CODE 13) use of Glyphosate (remember to captialize the "G") - show the histogram.
 
-```{r}
+
+```r
 Pesticides %>% 
   select(COMPOUND, STATE_CODE, AVG_ESTIMATE) %>%
   filter(STATE_CODE == 13 & COMPOUND == "Glyphosate") %>%
@@ -255,13 +456,24 @@ Pesticides %>%
   ggtitle("Glyphosate Levels Used in GA During 2014")
 ```
 
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+```
+## Warning: Removed 2 rows containing non-finite values (stat_bin).
+```
+
+![](Lecture7_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
+
 ## Modifying the data object - `rename` and `mutate`
 
 The `mutate()` and `rename()` functions allow us to cerate, redefine, and rename our variables. 
 
 When we created the new variable AVG_ESTIMATE above, we could have used `mutate()` to create and append a new variable to the Pesticides dataset (thus "mutating" it from its original form).
 
-```{r}
+
+```r
 # the option is to do this with the
 # dplyr package mutate() function
 # and the %>% "pipe" option also available
@@ -273,49 +485,155 @@ Pesticides <- Pesticides %>%
 summary(Pesticides)  
 ```
 
+```
+##    COMPOUND              YEAR        STATE_CODE     COUNTY_CODE   
+##  Length:392433      Min.   :2014   Min.   : 1.00   Min.   :  1.0  
+##  Class :character   1st Qu.:2014   1st Qu.:19.00   1st Qu.: 35.0  
+##  Mode  :character   Median :2014   Median :29.00   Median : 77.0  
+##                     Mean   :2014   Mean   :30.73   Mean   : 94.6  
+##                     3rd Qu.:2014   3rd Qu.:45.00   3rd Qu.:129.0  
+##                     Max.   :2014   Max.   :56.00   Max.   :810.0  
+##                                                                   
+##   LOW_ESTIMATE     HIGH_ESTIMATE      AVG_ESTIMATE    
+##  Min.   :      0   Min.   :      0   Min.   :      0  
+##  1st Qu.:      1   1st Qu.:      2   1st Qu.:      2  
+##  Median :     12   Median :     16   Median :     22  
+##  Mean   :   1534   Mean   :   1225   Mean   :   1598  
+##  3rd Qu.:    134   3rd Qu.:    142   3rd Qu.:    190  
+##  Max.   :5507146   Max.   :5507146   Max.   :5507146  
+##  NA's   :119027                      NA's   :119027
+```
+
 Suppose we wanted to rename this newly created variable from "AVG_ESTIMATE" to "avgEst", we could use `rename()` to change the name. We'll then run the `names()` command to see the new list of variable names for the Pesticides dataset.
 
-```{r}
+
+```r
 Pesticides <- Pesticides %>%
   rename(avgEst = AVG_ESTIMATE)
 
 names(Pesticides)
 ```
 
+```
+## [1] "COMPOUND"      "YEAR"          "STATE_CODE"    "COUNTY_CODE"  
+## [5] "LOW_ESTIMATE"  "HIGH_ESTIMATE" "avgEst"
+```
+
 ## Methods for summarising the data - `summarise` and `group_by`
 
 Next let's use the `group_by()` and `summarise()` commands from the `dplyr` package. Let's look at the mean "avgEst" from each state.
 
-```{r}
+
+```r
 stateLevels <- Pesticides %>%
   group_by(STATE_CODE) %>%
   summarise(meanLevel = mean(avgEst, na.rm=TRUE))
 
 # get some details on new stateLevels data object
 dim(stateLevels)
+```
+
+```
+## [1] 48  2
+```
+
+```r
 names(stateLevels)
+```
+
+```
+## [1] "STATE_CODE" "meanLevel"
 ```
 
 **NOTE:** This newly created object `stateLevels` is a nice neat "data.frame" object (run `class(stateLevels)` to check). Guess what - `knitr::kable()` works well on these kinds of objects so we can use this to make a table. 
 
 The `dim()` command shows us that we have 2 columns with names "STATE_CODE" and "meanLevel" for 48 states. IN the code below we'll clean up these column names and give the table a "caption". We'll clean this up further below by finding a way to match the names of the States to their Codes so we can use actual State names instead of just numeric codes.
 
-```{r}
+
+```r
 knitr::kable(x = stateLevels,
              col.names = c("State Codes",
                            "Avg Pesticide Level"),
              caption = "Average Pesticide Levels by State")
 ```
 
+
+
+Table: Average Pesticide Levels by State
+
+ State Codes   Avg Pesticide Level
+------------  --------------------
+           1             616.78129
+           4             733.01023
+           5            2530.44426
+           6            8810.56366
+           8            1777.02876
+           9             107.44967
+          10            2639.37889
+          12            3204.23587
+          13            1002.08895
+          16            3152.64039
+          17            2458.14985
+          18            1472.41866
+          19            2747.42778
+          20            2667.78582
+          21             475.33739
+          22            1827.42306
+          23             395.45515
+          24             696.49738
+          25             101.89350
+          26             687.61163
+          27            1566.79861
+          28            1230.97346
+          29            1644.08912
+          30            1592.76452
+          31            2937.92624
+          32             387.84827
+          33              56.56111
+          34             215.90439
+          35             708.25965
+          36             501.78881
+          37            1117.55851
+          38            3460.58602
+          39            1164.65426
+          40            1014.00845
+          41            1348.35280
+          42             481.23998
+          44              30.71599
+          45             865.23826
+          46            2547.50236
+          47             778.23528
+          48            1096.68217
+          49             216.11390
+          50              90.39137
+          51             398.48270
+          53            3669.99359
+          54              62.15134
+          55             877.49211
+          56             319.66602
+
 ## Let's make a map of the Pesticide Levels by State
 
-```{r}
+
+```r
 # get state names to go with the FIPS codes
 library(choroplethrMaps)
 data(state.regions)
 
 head(state.regions)
+```
 
+```
+##       region abb fips.numeric fips.character
+## 1     alaska  AK            2             02
+## 2    alabama  AL            1             01
+## 3   arkansas  AR            5             05
+## 4    arizona  AZ            4             04
+## 5 california  CA            6             06
+## 6   colorado  CO            8             08
+```
+
+```r
 # WARNING loading choroplethrMaps package
 # masks some of the dplyr functions
 # so below we use the package::function() syntax
@@ -324,26 +642,81 @@ head(state.regions)
 # the state.regions data object
 
 head(stateLevels)
+```
 
+```
+## # A tibble: 6 × 2
+##   STATE_CODE meanLevel
+##        <int>     <dbl>
+## 1          1  616.7813
+## 2          4  733.0102
+## 3          5 2530.4443
+## 4          6 8810.5637
+## 5          8 1777.0288
+## 6          9  107.4497
+```
+
+```r
 stateLevels <- stateLevels %>%
   dplyr::rename(fips.numeric = STATE_CODE)
 
 head(stateLevels)
+```
 
+```
+## # A tibble: 6 × 2
+##   fips.numeric meanLevel
+##          <int>     <dbl>
+## 1            1  616.7813
+## 2            4  733.0102
+## 3            5 2530.4443
+## 4            6 8810.5637
+## 5            8 1777.0288
+## 6            9  107.4497
+```
+
+```r
 # next let's merge (JOIN) this with our stateLevels
 stateLevels2 <- dplyr::right_join(stateLevels, 
                                   state.regions, 
                                   by="fips.numeric")
 
 head(stateLevels2)
+```
 
+```
+## # A tibble: 6 × 5
+##   fips.numeric meanLevel     region   abb fips.character
+##          <int>     <dbl>      <chr> <chr>          <chr>
+## 1            2        NA     alaska    AK             02
+## 2            1  616.7813    alabama    AL             01
+## 3            5 2530.4443   arkansas    AR             05
+## 4            4  733.0102    arizona    AZ             04
+## 5            6 8810.5637 california    CA             06
+## 6            8 1777.0288   colorado    CO             08
+```
+
+```r
 # learn more about joins at 
 # http://stat545.com/bit001_dplyr-cheatsheet.html
 
 # to make a map of the US with ggplot2
 # we need the map_data("state")
 states_map <- ggplot2::map_data("state")
+```
 
+```
+## 
+## Attaching package: 'maps'
+```
+
+```
+## The following object is masked from 'package:purrr':
+## 
+##     map
+```
+
+```r
 ggplot(stateLevels2, aes(map_id = region)) +
   geom_map(aes(fill = log10(meanLevel)),
            map = states_map,
@@ -351,8 +724,9 @@ ggplot(stateLevels2, aes(map_id = region)) +
   expand_limits(x = states_map$long, 
                 y = states_map$lat) +
   ggtitle("Average Pesticide Levels (log10 scale) by State in 2014 ")
-
 ```
+
+![](Lecture7_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
 
 
 
