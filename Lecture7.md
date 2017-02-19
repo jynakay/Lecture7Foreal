@@ -545,102 +545,7 @@ names(stateLevels)
 ## [1] "STATE_CODE" "meanLevel"
 ```
 
-**NOTE:** This newly created object `stateLevels` is a nice neat "data.frame" object (run `class(stateLevels)` to check). Guess what - `knitr::kable()` works well on these kinds of objects so we can use this to make a table. 
-
-The `dim()` command shows us that we have 2 columns with names "STATE_CODE" and "meanLevel" for 48 states. IN the code below we'll clean up these column names and give the table a "caption". We'll clean this up further below by finding a way to match the names of the States to their Codes so we can use actual State names instead of just numeric codes.
-
-
 ```r
-knitr::kable(x = stateLevels,
-             col.names = c("State Codes",
-                           "Avg Pesticide Level"),
-             caption = "Average Pesticide Levels by State")
-```
-
-
-
-Table: Average Pesticide Levels by State
-
- State Codes   Avg Pesticide Level
-------------  --------------------
-           1             616.78129
-           4             733.01023
-           5            2530.44426
-           6            8810.56366
-           8            1777.02876
-           9             107.44967
-          10            2639.37889
-          12            3204.23587
-          13            1002.08895
-          16            3152.64039
-          17            2458.14985
-          18            1472.41866
-          19            2747.42778
-          20            2667.78582
-          21             475.33739
-          22            1827.42306
-          23             395.45515
-          24             696.49738
-          25             101.89350
-          26             687.61163
-          27            1566.79861
-          28            1230.97346
-          29            1644.08912
-          30            1592.76452
-          31            2937.92624
-          32             387.84827
-          33              56.56111
-          34             215.90439
-          35             708.25965
-          36             501.78881
-          37            1117.55851
-          38            3460.58602
-          39            1164.65426
-          40            1014.00845
-          41            1348.35280
-          42             481.23998
-          44              30.71599
-          45             865.23826
-          46            2547.50236
-          47             778.23528
-          48            1096.68217
-          49             216.11390
-          50              90.39137
-          51             398.48270
-          53            3669.99359
-          54              62.15134
-          55             877.49211
-          56             319.66602
-
-## Let's make a map of the Pesticide Levels by State
-
-
-```r
-# get state names to go with the FIPS codes
-library(choroplethrMaps)
-data(state.regions)
-
-head(state.regions)
-```
-
-```
-##       region abb fips.numeric fips.character
-## 1     alaska  AK            2             02
-## 2    alabama  AL            1             01
-## 3   arkansas  AR            5             05
-## 4    arizona  AZ            4             04
-## 5 california  CA            6             06
-## 6   colorado  CO            8             08
-```
-
-```r
-# WARNING loading choroplethrMaps package
-# masks some of the dplyr functions
-# so below we use the package::function() syntax
-
-# rename STATE_CODE to match fips.numeric in
-# the state.regions data object
-
 head(stateLevels)
 ```
 
@@ -656,9 +561,74 @@ head(stateLevels)
 ## 6          9  107.4497
 ```
 
+**NOTE:** This newly created object `stateLevels` is a nice neat "data.frame" object (run `class(stateLevels)` to check). Guess what - `knitr::kable()` works well on these kinds of objects so we can use this to make a table. 
+
+The `dim()` command shows us that we have 2 columns with names "STATE_CODE" and "meanLevel" for 48 states. IN the code below we'll clean up these column names and give the table a "caption". We'll clean this up further below by finding a way to match the names of the States to their Codes so we can use actual State names instead of just numeric codes.
+
+To minimize the length of the table, we'll just include the 1st 10 rows.
+
+
 ```r
+knitr::kable(x = stateLevels[1:10,],
+             col.names = c("State Codes",
+                           "Avg Pesticide Level"),
+             caption = "Average Pesticide Levels by State")
+```
+
+
+
+Table: Average Pesticide Levels by State
+
+ State Codes   Avg Pesticide Level
+------------  --------------------
+           1              616.7813
+           4              733.0102
+           5             2530.4443
+           6             8810.5637
+           8             1777.0288
+           9              107.4497
+          10             2639.3789
+          12             3204.2359
+          13             1002.0889
+          16             3152.6404
+
+## Use JOIN commands - add State Abbreviations and Names
+
+In the `stateLevels` data object, so far all we have are numeric codes for the states but we'd like to add either the State abbreviations or the State names or both.
+
+1. We're going to add information on the states from a built in dataset `state.regions` from the `choroplethrMaps` package. 
+2. Then we rename `STATE_CODE` to `fips.numeric` to match with what is in the `state.regions` data object.
+3. Then we can "merge" the 2 data objects together using a JOIN. There are multiple ways to do a JOIN - to learn more see [http://stat545.com/bit001_dplyr-cheatsheet.html](http://stat545.com/bit001_dplyr-cheatsheet.html). For what we're wanting here, we'll do a LEFT JOIN to keep the data in our original `stateLevels` data object and only add the rows from `state.regions` that match up and ignore (not merge in) anything in `state.regions` that doesn't match up.
+
+
+```r
+# load choroplethrMaps package
+library(choroplethrMaps)
+
+# get state names to go with the FIPS codes
+# use data() function to load the data we
+# want into the environment
+data(state.regions)
+
+# look at top of state.regions dataset
+head(state.regions)
+```
+
+```
+##       region abb fips.numeric fips.character
+## 1     alaska  AK            2             02
+## 2    alabama  AL            1             01
+## 3   arkansas  AR            5             05
+## 4    arizona  AZ            4             04
+## 5 california  CA            6             06
+## 6   colorado  CO            8             08
+```
+
+```r
+# rename STATE_CODE to match fips.numeric in
+# the state.regions data object
 stateLevels <- stateLevels %>%
-  dplyr::rename(fips.numeric = STATE_CODE)
+  rename(fips.numeric = STATE_CODE)
 
 head(stateLevels)
 ```
@@ -677,29 +647,86 @@ head(stateLevels)
 
 ```r
 # next let's merge (JOIN) this with our stateLevels
-stateLevels2 <- dplyr::right_join(stateLevels, 
-                                  state.regions, 
-                                  by="fips.numeric")
+stateLevels2 <- left_join(stateLevels, 
+                           state.regions,
+                           by="fips.numeric")
 
 head(stateLevels2)
 ```
 
 ```
 ## # A tibble: 6 × 5
-##   fips.numeric meanLevel     region   abb fips.character
-##          <int>     <dbl>      <chr> <chr>          <chr>
-## 1            2        NA     alaska    AK             02
-## 2            1  616.7813    alabama    AL             01
-## 3            5 2530.4443   arkansas    AR             05
-## 4            4  733.0102    arizona    AZ             04
-## 5            6 8810.5637 california    CA             06
-## 6            8 1777.0288   colorado    CO             08
+##   fips.numeric meanLevel      region   abb fips.character
+##          <int>     <dbl>       <chr> <chr>          <chr>
+## 1            1  616.7813     alabama    AL             01
+## 2            4  733.0102     arizona    AZ             04
+## 3            5 2530.4443    arkansas    AR             05
+## 4            6 8810.5637  california    CA             06
+## 5            8 1777.0288    colorado    CO             08
+## 6            9  107.4497 connecticut    CT             09
 ```
 
-```r
-# learn more about joins at 
-# http://stat545.com/bit001_dplyr-cheatsheet.html
+## Arranging (sorting) data and making a better table.
 
+Another great verb from `dplyr` is `arrange()` which can be used to sort the dataset by the values in selected variables.
+
+Let's make the table again using the State Names instead of the codes - but first we'll sort the dataset and print the table for the top 10.
+
+
+```r
+stateLevels2 %>%
+  arrange(desc(meanLevel)) %>%
+  head()
+```
+
+```
+## # A tibble: 6 × 5
+##   fips.numeric meanLevel       region   abb fips.character
+##          <int>     <dbl>        <chr> <chr>          <chr>
+## 1            6  8810.564   california    CA             06
+## 2           53  3669.994   washington    WA             53
+## 3           38  3460.586 north dakota    ND             38
+## 4           12  3204.236      florida    FL             12
+## 5           16  3152.640        idaho    ID             16
+## 6           31  2937.926     nebraska    NE             31
+```
+
+Using this approach, we'll append the `knitr::kable()` commands and make an updated table. We select the top 10 rows after the `arrange()` command by using the `slice()` command.
+
+
+```r
+stateLevels2 %>%
+  arrange(desc(meanLevel)) %>%
+  select(region, meanLevel) %>%
+  slice(1:10) %>%
+  knitr::kable(col.names = c("State",
+                             "Avg Pesticide Level"),
+               caption = "Average Pesticide Levels - Top 10 States")
+```
+
+
+
+Table: Average Pesticide Levels - Top 10 States
+
+State           Avg Pesticide Level
+-------------  --------------------
+california                 8810.564
+washington                 3669.994
+north dakota               3460.586
+florida                    3204.236
+idaho                      3152.640
+nebraska                   2937.926
+iowa                       2747.428
+kansas                     2667.786
+delaware                   2639.379
+south dakota               2547.502
+
+## Let's make a map of the Pesticide Levels by State
+
+Now that we have the State abbreviations and names merged with the average pesticide levels, we can use these values to make a "Chlorpleth Map" where each State is colored according to the variable level we specify (in this case the average pesticide levels).
+
+
+```r
 # to make a map of the US with ggplot2
 # we need the map_data("state")
 states_map <- ggplot2::map_data("state")
@@ -717,6 +744,7 @@ states_map <- ggplot2::map_data("state")
 ```
 
 ```r
+# ggplot layers to make the map
 ggplot(stateLevels2, aes(map_id = region)) +
   geom_map(aes(fill = log10(meanLevel)),
            map = states_map,
@@ -726,11 +754,55 @@ ggplot(stateLevels2, aes(map_id = region)) +
   ggtitle("Average Pesticide Levels (log10 scale) by State in 2014 ")
 ```
 
-![](Lecture7_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+![](Lecture7_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
+
+## Check environment again at end
+
+Run `sessionInfo()` and `ls()` again to check your current session environment and objects loaded.
 
 
+```r
+sessionInfo()
+```
 
-*Melinda, I am stopping here but intend to get through this and some ggplot examples. Or do you want to do the ggplot and I will just finish with dplyr?*
+```
+## R version 3.3.2 (2016-10-31)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 14393)
+## 
+## locale:
+## [1] LC_COLLATE=English_United States.1252 
+## [2] LC_CTYPE=English_United States.1252   
+## [3] LC_MONETARY=English_United States.1252
+## [4] LC_NUMERIC=C                          
+## [5] LC_TIME=English_United States.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] maps_3.1.1          choroplethrMaps_1.0 dplyr_0.5.0        
+## [4] purrr_0.2.2.9000    readr_1.0.0         tidyr_0.6.0        
+## [7] tibble_1.2-12       ggplot2_2.2.0       tidyverse_1.0.0    
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.8      knitr_1.15.1     magrittr_1.5     munsell_0.4.3   
+##  [5] colorspace_1.2-6 R6_2.1.3         highr_0.6        stringr_1.1.0   
+##  [9] plyr_1.8.4       tools_3.3.2      grid_3.3.2       gtable_0.2.0    
+## [13] DBI_0.5          htmltools_0.3.5  yaml_2.1.14      lazyeval_0.2.0  
+## [17] rprojroot_1.1    digest_0.6.10    assertthat_0.1   evaluate_0.10   
+## [21] rmarkdown_1.3    labeling_0.3     stringi_1.1.2    scales_0.4.1    
+## [25] backports_1.0.4
+```
 
-*Things I still have to cover: mutate(), rename(), arrange(), and summarize() with group_by(), also joins (inner and outer) and wide v narrow data.*
+```r
+ls()
+```
+
+```
+##  [1] "ag_dict"          "FL_Atrazine"      "FL_Atrazine_new" 
+##  [4] "FL_subset"        "pesticide_subset" "Pesticides"      
+##  [7] "state.regions"    "stateLevels"      "stateLevels2"    
+## [10] "states_map"
+```
 

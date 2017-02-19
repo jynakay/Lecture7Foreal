@@ -1,10 +1,12 @@
 ---
-title: "N741: Lecture 7 Data and Code Wrangling"
+title: 'N741: Lecture 7 Data and Code Wrangling'
 author: "Vicki Hertzberg and Melinda Higgins"
 date: "February 17, 2017"
-output: 
+output:
   html_document:
-    keep_md: true
+    keep_md: yes
+  pdf_document: default
+  word_document: default
 ---
 
 ## Markdown Document Begins
@@ -294,56 +296,91 @@ stateLevels <- Pesticides %>%
 # get some details on new stateLevels data object
 dim(stateLevels)
 names(stateLevels)
+head(stateLevels)
 ```
 
 **NOTE:** This newly created object `stateLevels` is a nice neat "data.frame" object (run `class(stateLevels)` to check). Guess what - `knitr::kable()` works well on these kinds of objects so we can use this to make a table. 
 
 The `dim()` command shows us that we have 2 columns with names "STATE_CODE" and "meanLevel" for 48 states. IN the code below we'll clean up these column names and give the table a "caption". We'll clean this up further below by finding a way to match the names of the States to their Codes so we can use actual State names instead of just numeric codes.
 
+To minimize the length of the table, we'll just include the 1st 10 rows.
+
 ```{r}
-knitr::kable(x = stateLevels,
+knitr::kable(x = stateLevels[1:10,],
              col.names = c("State Codes",
                            "Avg Pesticide Level"),
              caption = "Average Pesticide Levels by State")
 ```
 
-## Let's make a map of the Pesticide Levels by State
+## Use JOIN commands - add State Abbreviations and Names
+
+In the `stateLevels` data object, so far all we have are numeric codes for the states but we'd like to add either the State abbreviations or the State names or both.
+
+1. We're going to add information on the states from a built in dataset `state.regions` from the `choroplethrMaps` package. 
+2. Then we rename `STATE_CODE` to `fips.numeric` to match with what is in the `state.regions` data object.
+3. Then we can "merge" the 2 data objects together using a JOIN. There are multiple ways to do a JOIN - to learn more see [http://stat545.com/bit001_dplyr-cheatsheet.html](http://stat545.com/bit001_dplyr-cheatsheet.html). For what we're wanting here, we'll do a LEFT JOIN to keep the data in our original `stateLevels` data object and only add the rows from `state.regions` that match up and ignore (not merge in) anything in `state.regions` that doesn't match up.
 
 ```{r}
-# get state names to go with the FIPS codes
+# load choroplethrMaps package
 library(choroplethrMaps)
+
+# get state names to go with the FIPS codes
+# use data() function to load the data we
+# want into the environment
 data(state.regions)
 
+# look at top of state.regions dataset
 head(state.regions)
-
-# WARNING loading choroplethrMaps package
-# masks some of the dplyr functions
-# so below we use the package::function() syntax
 
 # rename STATE_CODE to match fips.numeric in
 # the state.regions data object
-
-head(stateLevels)
-
 stateLevels <- stateLevels %>%
-  dplyr::rename(fips.numeric = STATE_CODE)
+  rename(fips.numeric = STATE_CODE)
 
 head(stateLevels)
 
 # next let's merge (JOIN) this with our stateLevels
-stateLevels2 <- dplyr::right_join(stateLevels, 
-                                  state.regions, 
-                                  by="fips.numeric")
+stateLevels2 <- left_join(stateLevels, 
+                           state.regions,
+                           by="fips.numeric")
 
 head(stateLevels2)
+```
 
-# learn more about joins at 
-# http://stat545.com/bit001_dplyr-cheatsheet.html
+## Arranging (sorting) data and making a better table.
 
+Another great verb from `dplyr` is `arrange()` which can be used to sort the dataset by the values in selected variables.
+
+Let's make the table again using the State Names instead of the codes - but first we'll sort the dataset and print the table for the top 10.
+
+```{r}
+stateLevels2 %>%
+  arrange(desc(meanLevel)) %>%
+  head()
+```
+
+Using this approach, we'll append the `knitr::kable()` commands and make an updated table. We select the top 10 rows after the `arrange()` command by using the `slice()` command.
+
+```{r}
+stateLevels2 %>%
+  arrange(desc(meanLevel)) %>%
+  select(region, meanLevel) %>%
+  slice(1:10) %>%
+  knitr::kable(col.names = c("State",
+                             "Avg Pesticide Level"),
+               caption = "Average Pesticide Levels - Top 10 States")
+```
+
+## Let's make a map of the Pesticide Levels by State
+
+Now that we have the State abbreviations and names merged with the average pesticide levels, we can use these values to make a "Chlorpleth Map" where each State is colored according to the variable level we specify (in this case the average pesticide levels).
+
+```{r}
 # to make a map of the US with ggplot2
 # we need the map_data("state")
 states_map <- ggplot2::map_data("state")
 
+# ggplot layers to make the map
 ggplot(stateLevels2, aes(map_id = region)) +
   geom_map(aes(fill = log10(meanLevel)),
            map = states_map,
@@ -354,9 +391,12 @@ ggplot(stateLevels2, aes(map_id = region)) +
 
 ```
 
+## Check environment again at end
 
+Run `sessionInfo()` and `ls()` again to check your current session environment and objects loaded.
 
-*Melinda, I am stopping here but intend to get through this and some ggplot examples. Or do you want to do the ggplot and I will just finish with dplyr?*
-
-*Things I still have to cover: mutate(), rename(), arrange(), and summarize() with group_by(), also joins (inner and outer) and wide v narrow data.*
+```{r}
+sessionInfo()
+ls()
+```
 

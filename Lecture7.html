@@ -484,9 +484,20 @@ dim(stateLevels)</code></pre>
 <pre><code>## [1] 48  2</code></pre>
 <pre class="r"><code>names(stateLevels)</code></pre>
 <pre><code>## [1] &quot;STATE_CODE&quot; &quot;meanLevel&quot;</code></pre>
+<pre class="r"><code>head(stateLevels)</code></pre>
+<pre><code>## # A tibble: 6 × 2
+##   STATE_CODE meanLevel
+##        &lt;int&gt;     &lt;dbl&gt;
+## 1          1  616.7813
+## 2          4  733.0102
+## 3          5 2530.4443
+## 4          6 8810.5637
+## 5          8 1777.0288
+## 6          9  107.4497</code></pre>
 <p><strong>NOTE:</strong> This newly created object <code>stateLevels</code> is a nice neat “data.frame” object (run <code>class(stateLevels)</code> to check). Guess what - <code>knitr::kable()</code> works well on these kinds of objects so we can use this to make a table.</p>
 <p>The <code>dim()</code> command shows us that we have 2 columns with names “STATE_CODE” and “meanLevel” for 48 states. IN the code below we’ll clean up these column names and give the table a “caption”. We’ll clean this up further below by finding a way to match the names of the States to their Codes so we can use actual State names instead of just numeric codes.</p>
-<pre class="r"><code>knitr::kable(x = stateLevels,
+<p>To minimize the length of the table, we’ll just include the 1st 10 rows.</p>
+<pre class="r"><code>knitr::kable(x = stateLevels[1:10,],
              col.names = c(&quot;State Codes&quot;,
                            &quot;Avg Pesticide Level&quot;),
              caption = &quot;Average Pesticide Levels by State&quot;)</code></pre>
@@ -501,205 +512,64 @@ dim(stateLevels)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="right">1</td>
-<td align="right">616.78129</td>
+<td align="right">616.7813</td>
 </tr>
 <tr class="even">
 <td align="right">4</td>
-<td align="right">733.01023</td>
+<td align="right">733.0102</td>
 </tr>
 <tr class="odd">
 <td align="right">5</td>
-<td align="right">2530.44426</td>
+<td align="right">2530.4443</td>
 </tr>
 <tr class="even">
 <td align="right">6</td>
-<td align="right">8810.56366</td>
+<td align="right">8810.5637</td>
 </tr>
 <tr class="odd">
 <td align="right">8</td>
-<td align="right">1777.02876</td>
+<td align="right">1777.0288</td>
 </tr>
 <tr class="even">
 <td align="right">9</td>
-<td align="right">107.44967</td>
+<td align="right">107.4497</td>
 </tr>
 <tr class="odd">
 <td align="right">10</td>
-<td align="right">2639.37889</td>
+<td align="right">2639.3789</td>
 </tr>
 <tr class="even">
 <td align="right">12</td>
-<td align="right">3204.23587</td>
+<td align="right">3204.2359</td>
 </tr>
 <tr class="odd">
 <td align="right">13</td>
-<td align="right">1002.08895</td>
+<td align="right">1002.0889</td>
 </tr>
 <tr class="even">
 <td align="right">16</td>
-<td align="right">3152.64039</td>
-</tr>
-<tr class="odd">
-<td align="right">17</td>
-<td align="right">2458.14985</td>
-</tr>
-<tr class="even">
-<td align="right">18</td>
-<td align="right">1472.41866</td>
-</tr>
-<tr class="odd">
-<td align="right">19</td>
-<td align="right">2747.42778</td>
-</tr>
-<tr class="even">
-<td align="right">20</td>
-<td align="right">2667.78582</td>
-</tr>
-<tr class="odd">
-<td align="right">21</td>
-<td align="right">475.33739</td>
-</tr>
-<tr class="even">
-<td align="right">22</td>
-<td align="right">1827.42306</td>
-</tr>
-<tr class="odd">
-<td align="right">23</td>
-<td align="right">395.45515</td>
-</tr>
-<tr class="even">
-<td align="right">24</td>
-<td align="right">696.49738</td>
-</tr>
-<tr class="odd">
-<td align="right">25</td>
-<td align="right">101.89350</td>
-</tr>
-<tr class="even">
-<td align="right">26</td>
-<td align="right">687.61163</td>
-</tr>
-<tr class="odd">
-<td align="right">27</td>
-<td align="right">1566.79861</td>
-</tr>
-<tr class="even">
-<td align="right">28</td>
-<td align="right">1230.97346</td>
-</tr>
-<tr class="odd">
-<td align="right">29</td>
-<td align="right">1644.08912</td>
-</tr>
-<tr class="even">
-<td align="right">30</td>
-<td align="right">1592.76452</td>
-</tr>
-<tr class="odd">
-<td align="right">31</td>
-<td align="right">2937.92624</td>
-</tr>
-<tr class="even">
-<td align="right">32</td>
-<td align="right">387.84827</td>
-</tr>
-<tr class="odd">
-<td align="right">33</td>
-<td align="right">56.56111</td>
-</tr>
-<tr class="even">
-<td align="right">34</td>
-<td align="right">215.90439</td>
-</tr>
-<tr class="odd">
-<td align="right">35</td>
-<td align="right">708.25965</td>
-</tr>
-<tr class="even">
-<td align="right">36</td>
-<td align="right">501.78881</td>
-</tr>
-<tr class="odd">
-<td align="right">37</td>
-<td align="right">1117.55851</td>
-</tr>
-<tr class="even">
-<td align="right">38</td>
-<td align="right">3460.58602</td>
-</tr>
-<tr class="odd">
-<td align="right">39</td>
-<td align="right">1164.65426</td>
-</tr>
-<tr class="even">
-<td align="right">40</td>
-<td align="right">1014.00845</td>
-</tr>
-<tr class="odd">
-<td align="right">41</td>
-<td align="right">1348.35280</td>
-</tr>
-<tr class="even">
-<td align="right">42</td>
-<td align="right">481.23998</td>
-</tr>
-<tr class="odd">
-<td align="right">44</td>
-<td align="right">30.71599</td>
-</tr>
-<tr class="even">
-<td align="right">45</td>
-<td align="right">865.23826</td>
-</tr>
-<tr class="odd">
-<td align="right">46</td>
-<td align="right">2547.50236</td>
-</tr>
-<tr class="even">
-<td align="right">47</td>
-<td align="right">778.23528</td>
-</tr>
-<tr class="odd">
-<td align="right">48</td>
-<td align="right">1096.68217</td>
-</tr>
-<tr class="even">
-<td align="right">49</td>
-<td align="right">216.11390</td>
-</tr>
-<tr class="odd">
-<td align="right">50</td>
-<td align="right">90.39137</td>
-</tr>
-<tr class="even">
-<td align="right">51</td>
-<td align="right">398.48270</td>
-</tr>
-<tr class="odd">
-<td align="right">53</td>
-<td align="right">3669.99359</td>
-</tr>
-<tr class="even">
-<td align="right">54</td>
-<td align="right">62.15134</td>
-</tr>
-<tr class="odd">
-<td align="right">55</td>
-<td align="right">877.49211</td>
-</tr>
-<tr class="even">
-<td align="right">56</td>
-<td align="right">319.66602</td>
+<td align="right">3152.6404</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="lets-make-a-map-of-the-pesticide-levels-by-state" class="section level2">
-<h2>Let’s make a map of the Pesticide Levels by State</h2>
-<pre class="r"><code># get state names to go with the FIPS codes
+<div id="use-join-commands---add-state-abbreviations-and-names" class="section level2">
+<h2>Use JOIN commands - add State Abbreviations and Names</h2>
+<p>In the <code>stateLevels</code> data object, so far all we have are numeric codes for the states but we’d like to add either the State abbreviations or the State names or both.</p>
+<ol style="list-style-type: decimal">
+<li>We’re going to add information on the states from a built in dataset <code>state.regions</code> from the <code>choroplethrMaps</code> package.</li>
+<li>Then we rename <code>STATE_CODE</code> to <code>fips.numeric</code> to match with what is in the <code>state.regions</code> data object.</li>
+<li>Then we can “merge” the 2 data objects together using a JOIN. There are multiple ways to do a JOIN - to learn more see <a href="http://stat545.com/bit001_dplyr-cheatsheet.html" class="uri">http://stat545.com/bit001_dplyr-cheatsheet.html</a>. For what we’re wanting here, we’ll do a LEFT JOIN to keep the data in our original <code>stateLevels</code> data object and only add the rows from <code>state.regions</code> that match up and ignore (not merge in) anything in <code>state.regions</code> that doesn’t match up.</li>
+</ol>
+<pre class="r"><code># load choroplethrMaps package
 library(choroplethrMaps)
+
+# get state names to go with the FIPS codes
+# use data() function to load the data we
+# want into the environment
 data(state.regions)
 
+# look at top of state.regions dataset
 head(state.regions)</code></pre>
 <pre><code>##       region abb fips.numeric fips.character
 ## 1     alaska  AK            2             02
@@ -708,25 +578,10 @@ head(state.regions)</code></pre>
 ## 4    arizona  AZ            4             04
 ## 5 california  CA            6             06
 ## 6   colorado  CO            8             08</code></pre>
-<pre class="r"><code># WARNING loading choroplethrMaps package
-# masks some of the dplyr functions
-# so below we use the package::function() syntax
-
-# rename STATE_CODE to match fips.numeric in
+<pre class="r"><code># rename STATE_CODE to match fips.numeric in
 # the state.regions data object
-
-head(stateLevels)</code></pre>
-<pre><code>## # A tibble: 6 × 2
-##   STATE_CODE meanLevel
-##        &lt;int&gt;     &lt;dbl&gt;
-## 1          1  616.7813
-## 2          4  733.0102
-## 3          5 2530.4443
-## 4          6 8810.5637
-## 5          8 1777.0288
-## 6          9  107.4497</code></pre>
-<pre class="r"><code>stateLevels &lt;- stateLevels %&gt;%
-  dplyr::rename(fips.numeric = STATE_CODE)
+stateLevels &lt;- stateLevels %&gt;%
+  rename(fips.numeric = STATE_CODE)
 
 head(stateLevels)</code></pre>
 <pre><code>## # A tibble: 6 × 2
@@ -739,24 +594,101 @@ head(stateLevels)</code></pre>
 ## 5            8 1777.0288
 ## 6            9  107.4497</code></pre>
 <pre class="r"><code># next let's merge (JOIN) this with our stateLevels
-stateLevels2 &lt;- dplyr::right_join(stateLevels, 
-                                  state.regions, 
-                                  by=&quot;fips.numeric&quot;)
+stateLevels2 &lt;- left_join(stateLevels, 
+                           state.regions,
+                           by=&quot;fips.numeric&quot;)
 
 head(stateLevels2)</code></pre>
 <pre><code>## # A tibble: 6 × 5
-##   fips.numeric meanLevel     region   abb fips.character
-##          &lt;int&gt;     &lt;dbl&gt;      &lt;chr&gt; &lt;chr&gt;          &lt;chr&gt;
-## 1            2        NA     alaska    AK             02
-## 2            1  616.7813    alabama    AL             01
-## 3            5 2530.4443   arkansas    AR             05
-## 4            4  733.0102    arizona    AZ             04
-## 5            6 8810.5637 california    CA             06
-## 6            8 1777.0288   colorado    CO             08</code></pre>
-<pre class="r"><code># learn more about joins at 
-# http://stat545.com/bit001_dplyr-cheatsheet.html
-
-# to make a map of the US with ggplot2
+##   fips.numeric meanLevel      region   abb fips.character
+##          &lt;int&gt;     &lt;dbl&gt;       &lt;chr&gt; &lt;chr&gt;          &lt;chr&gt;
+## 1            1  616.7813     alabama    AL             01
+## 2            4  733.0102     arizona    AZ             04
+## 3            5 2530.4443    arkansas    AR             05
+## 4            6 8810.5637  california    CA             06
+## 5            8 1777.0288    colorado    CO             08
+## 6            9  107.4497 connecticut    CT             09</code></pre>
+</div>
+<div id="arranging-sorting-data-and-making-a-better-table." class="section level2">
+<h2>Arranging (sorting) data and making a better table.</h2>
+<p>Another great verb from <code>dplyr</code> is <code>arrange()</code> which can be used to sort the dataset by the values in selected variables.</p>
+<p>Let’s make the table again using the State Names instead of the codes - but first we’ll sort the dataset and print the table for the top 10.</p>
+<pre class="r"><code>stateLevels2 %&gt;%
+  arrange(desc(meanLevel)) %&gt;%
+  head()</code></pre>
+<pre><code>## # A tibble: 6 × 5
+##   fips.numeric meanLevel       region   abb fips.character
+##          &lt;int&gt;     &lt;dbl&gt;        &lt;chr&gt; &lt;chr&gt;          &lt;chr&gt;
+## 1            6  8810.564   california    CA             06
+## 2           53  3669.994   washington    WA             53
+## 3           38  3460.586 north dakota    ND             38
+## 4           12  3204.236      florida    FL             12
+## 5           16  3152.640        idaho    ID             16
+## 6           31  2937.926     nebraska    NE             31</code></pre>
+<p>Using this approach, we’ll append the <code>knitr::kable()</code> commands and make an updated table. We select the top 10 rows after the <code>arrange()</code> command by using the <code>slice()</code> command.</p>
+<pre class="r"><code>stateLevels2 %&gt;%
+  arrange(desc(meanLevel)) %&gt;%
+  select(region, meanLevel) %&gt;%
+  slice(1:10) %&gt;%
+  knitr::kable(col.names = c(&quot;State&quot;,
+                             &quot;Avg Pesticide Level&quot;),
+               caption = &quot;Average Pesticide Levels - Top 10 States&quot;)</code></pre>
+<table>
+<caption>Average Pesticide Levels - Top 10 States</caption>
+<thead>
+<tr class="header">
+<th align="left">State</th>
+<th align="right">Avg Pesticide Level</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">california</td>
+<td align="right">8810.564</td>
+</tr>
+<tr class="even">
+<td align="left">washington</td>
+<td align="right">3669.994</td>
+</tr>
+<tr class="odd">
+<td align="left">north dakota</td>
+<td align="right">3460.586</td>
+</tr>
+<tr class="even">
+<td align="left">florida</td>
+<td align="right">3204.236</td>
+</tr>
+<tr class="odd">
+<td align="left">idaho</td>
+<td align="right">3152.640</td>
+</tr>
+<tr class="even">
+<td align="left">nebraska</td>
+<td align="right">2937.926</td>
+</tr>
+<tr class="odd">
+<td align="left">iowa</td>
+<td align="right">2747.428</td>
+</tr>
+<tr class="even">
+<td align="left">kansas</td>
+<td align="right">2667.786</td>
+</tr>
+<tr class="odd">
+<td align="left">delaware</td>
+<td align="right">2639.379</td>
+</tr>
+<tr class="even">
+<td align="left">south dakota</td>
+<td align="right">2547.502</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="lets-make-a-map-of-the-pesticide-levels-by-state" class="section level2">
+<h2>Let’s make a map of the Pesticide Levels by State</h2>
+<p>Now that we have the State abbreviations and names merged with the average pesticide levels, we can use these values to make a “Chlorpleth Map” where each State is colored according to the variable level we specify (in this case the average pesticide levels).</p>
+<pre class="r"><code># to make a map of the US with ggplot2
 # we need the map_data(&quot;state&quot;)
 states_map &lt;- ggplot2::map_data(&quot;state&quot;)</code></pre>
 <pre><code>## 
@@ -764,7 +696,8 @@ states_map &lt;- ggplot2::map_data(&quot;state&quot;)</code></pre>
 <pre><code>## The following object is masked from 'package:purrr':
 ## 
 ##     map</code></pre>
-<pre class="r"><code>ggplot(stateLevels2, aes(map_id = region)) +
+<pre class="r"><code># ggplot layers to make the map
+ggplot(stateLevels2, aes(map_id = region)) +
   geom_map(aes(fill = log10(meanLevel)),
            map = states_map,
            colour=&quot;white&quot;) +
@@ -772,8 +705,43 @@ states_map &lt;- ggplot2::map_data(&quot;state&quot;)</code></pre>
                 y = states_map$lat) +
   ggtitle(&quot;Average Pesticide Levels (log10 scale) by State in 2014 &quot;)</code></pre>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
-<p><em>Melinda, I am stopping here but intend to get through this and some ggplot examples. Or do you want to do the ggplot and I will just finish with dplyr?</em></p>
-<p><em>Things I still have to cover: mutate(), rename(), arrange(), and summarize() with group_by(), also joins (inner and outer) and wide v narrow data.</em></p>
+</div>
+<div id="check-environment-again-at-end" class="section level2">
+<h2>Check environment again at end</h2>
+<p>Run <code>sessionInfo()</code> and <code>ls()</code> again to check your current session environment and objects loaded.</p>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 3.3.2 (2016-10-31)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 14393)
+## 
+## locale:
+## [1] LC_COLLATE=English_United States.1252 
+## [2] LC_CTYPE=English_United States.1252   
+## [3] LC_MONETARY=English_United States.1252
+## [4] LC_NUMERIC=C                          
+## [5] LC_TIME=English_United States.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] maps_3.1.1          choroplethrMaps_1.0 dplyr_0.5.0        
+## [4] purrr_0.2.2.9000    readr_1.0.0         tidyr_0.6.0        
+## [7] tibble_1.2-12       ggplot2_2.2.0       tidyverse_1.0.0    
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_0.12.8      knitr_1.15.1     magrittr_1.5     munsell_0.4.3   
+##  [5] colorspace_1.2-6 R6_2.1.3         highr_0.6        stringr_1.1.0   
+##  [9] plyr_1.8.4       tools_3.3.2      grid_3.3.2       gtable_0.2.0    
+## [13] DBI_0.5          htmltools_0.3.5  yaml_2.1.14      lazyeval_0.2.0  
+## [17] rprojroot_1.1    digest_0.6.10    assertthat_0.1   evaluate_0.10   
+## [21] rmarkdown_1.3    labeling_0.3     stringi_1.1.2    scales_0.4.1    
+## [25] backports_1.0.4</code></pre>
+<pre class="r"><code>ls()</code></pre>
+<pre><code>##  [1] &quot;ag_dict&quot;          &quot;FL_Atrazine&quot;      &quot;FL_Atrazine_new&quot; 
+##  [4] &quot;FL_subset&quot;        &quot;pesticide_subset&quot; &quot;Pesticides&quot;      
+##  [7] &quot;state.regions&quot;    &quot;stateLevels&quot;      &quot;stateLevels2&quot;    
+## [10] &quot;states_map&quot;</code></pre>
 </div>
 
 
