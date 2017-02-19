@@ -111,6 +111,14 @@ sessionInfo()
 ## [21] stringi_1.1.2    scales_0.4.1     backports_1.0.4
 ```
 
+```r
+ls()
+```
+
+```
+## character(0)
+```
+
 Now you get a 5th category in the `sessionInfo()` listing "other attached packages". So, you can now see that by loading `tidyverse` we have greatly expanded the functionality now available. `tidyverse` has now added:
 
 * `dplyr`
@@ -756,6 +764,172 @@ ggplot(stateLevels2, aes(map_id = region)) +
 
 ![](Lecture7_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
 
+## Nested Data Structures
+
+Many datasets have more than 1 measure for each "case or subject" in the dataset - in other words, the measurements are nested within the subjects (cases). Not only do we have more than 1 measurement per subject, we often take these measurements at multiple times (time nested within measurements nested within subjects). Sometimes the subjects themselves are nested within higher "structures" we are interested in - such as subjects living within households or students in a classroom and those households are then nested within neighborhoods or classrooms within schools - or patients within units within hospitals, and so on... The possibilities are limitless.
+
+Thus, even we have "tidy" data, we want to change it around and restructure it so that we can access the data at the level we want. Often the level of measurement may change - for example, sometimes we may be interested in the patients as the level of outcome of interest and othertimes we're interested in the hospital units as the level of interest.
+
+### The nested (or hierarchical) structure of the Pesticide Data
+
+This Pesticide dataset is a very "long" (or "tall") dataset since this is a 3-level "nested" dataset where the 388 pesticide chemical measurements are "nested" -> within counties which are "nested" -> within states (which is within the United States).
+
+### Example Nested Data Structure - `DiagrammeR` Graphic
+
+The figure below was generated using a cool package called `DiagrammeR`, which you can learn more about at [http://rich-iannone.github.io/DiagrammeR/index.html](http://rich-iannone.github.io/DiagrammeR/index.html). The RED circles represent states (S1, S2, S3, ...); the GREEN circles represent the counties (c1, c2, c3, ...) and the ORANGE circles represent the pesticides (p1, p2, p3, ...).
+
+<!--html_preserve--><div id="htmlwidget-4e3ec8f50f40c3aa55f9" style="width:672px;height:480px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4e3ec8f50f40c3aa55f9">{"x":{"diagram":"\n      digraph dot {\n      \n      graph [layout = dot]\n      \n      node [shape = circle,\n      style = filled,\n      color = grey]\n      \n      node [fillcolor = red]\n      S1 S2 S3\n      \n      node [fillcolor = green]\n      c1 c2 c3 c4 c5 c6 c7 c8\n      \n      node [fillcolor = orange]\n      \n      edge [color = grey]\n      S1 -> {c1 c2}\n      S2 -> {c3 c4 c5}\n      S3 -> {c6 c7 c8}\n      c1 -> {p1 p2 p3 p4}\n      c2 -> {p1 p2 p3 p4}\n      c3 -> {p1 p2 p3 p4}\n      c4 -> {p1 p2 p3 p4}\n      c5 -> {p1 p2 p3 p4}\n      c6 -> {p1 p2 p3 p4}\n      c7 -> {p1 p2 p3 p4}\n      c8 -> {p1 p2 p3 p4}\n      }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+### Another fun graph to visualize this
+
+The varying grey-shaded nodes represent the different pesticides.
+
+<!--html_preserve--><div id="htmlwidget-f0c12d25198b963cffce" style="width:672px;height:480px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f0c12d25198b963cffce">{"x":{"diagram":"\n      digraph neato {\n      \n      graph [layout = neato]\n      \n      node [shape = circle,\n      style = filled,\n      color = grey]\n      \n      node [fillcolor = red]\n      US\n      \n      node [fillcolor = green]\n      S1 S2 S3\n      \n      node [fillcolor = orange]\n      c1 c2 c3 c4 c5 c6 c7 c8 c9\n\n      node [fillcolor = grey41, label = \"\"]\n      p1 p6 p11 p16 p21 p26 p31 p36 p41\n\n      node [fillcolor = grey51, label = \"\"]\n      p2 p7 p12 p17 p22 p27 p32 p37 p42\n\n      node [fillcolor = grey61, label = \"\"]\n      p3 p8 p13 p18 p23 p28 p33 p38 p43\n\n      node [fillcolor = grey71, label = \"\"]\n      p4 p9 p14 p19 p24 p29 p34 p39 p44\n\n      node [fillcolor = grey81, label = \"\"]\n      p5 p10 p15 p20 p25 p30 p35 p40 p45\n\n      edge [color = grey]\n      US -> {S1 S2 S3}\n      S1 -> {c1 c2 c3}\n      S2 -> {c4 c5 c6}\n      S3 -> {c7 c8 c9}\n      c1 -> {p1 p2 p3 p4 p5}\n      c2 -> {p6 p7 p8 p9 p10}\n      c3 -> {p11 p12 p13 p14 p15}\n      c4 -> {p16 p17 p18 p19 p20}\n      c5 -> {p21 p22 p23 p24 p25}\n      c6 -> {p26 p27 p28 p29 p30}\n      c7 -> {p31 p32 p33 p34 p35}\n      c8 -> {p36 p37 p38 p39 p40}\n      c9 -> {p41 p42 p43 p44 p45}\n      }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+
+## Restructure Pesticides Data from "long" to "wide"
+
+The primary functions we will explore here are `spread()` and `gather()` from the `tidyr` package.
+
+So, what if wanted the 388 pesticides to each have their own column (i.e. separate variables for each pesticide level). In this case we are moving pesticide level from a row in the "avgEst" average estimate into it's own column.
+
+We want to `spread()` the pesticides from rows out into columns - thus making the dataset "wider". To make this easier to see, let's just focus on Florida (STATE_CODE = 12) and let's just look at 3 pesticides: "Atrazine", "Glyphosate", and "Malathion".
+
+This newly created dataset should have the number of rows equal to the counties who used Atrazine or Glyphosate or Malathion. The `sum()` statements below count the number of TRUE values for each condition. Check this again the `dim()` rows for the final dataset as a quick check. [The answer is 60 + 67 + 64 = 191.] Also, we will only keep the COMPOUND, COUNTY_CODE, and avgEst.
+
+
+```r
+# number of Florida Counties who used Atrazine
+sum(FL_subset$COMPOUND == "Atrazine")
+```
+
+```
+## [1] 60
+```
+
+```r
+# number of Florida Counties who used Glyphosate
+sum(FL_subset$COMPOUND == "Glyphosate")
+```
+
+```
+## [1] 67
+```
+
+```r
+# number of Florida Counties who used Malathion
+sum(FL_subset$COMPOUND == "Malathion")
+```
+
+```
+## [1] 64
+```
+
+```r
+FL_3pest <- Pesticides %>%
+  filter(STATE_CODE == 12) %>%
+  filter(COMPOUND %in% c("Atrazine",
+                         "Glyphosate",
+                         "Malathion")) %>%
+  select(COMPOUND, 
+         COUNTY_CODE, 
+         avgEst)
+
+dim(FL_3pest)
+```
+
+```
+## [1] 191   3
+```
+
+```r
+head(FL_3pest)
+```
+
+```
+## # A tibble: 6 × 3
+##   COMPOUND COUNTY_CODE avgEst
+##      <chr>       <int>  <dbl>
+## 1 Atrazine           1 3952.9
+## 2 Atrazine           3  166.2
+## 3 Atrazine           5    4.4
+## 4 Atrazine           7  495.3
+## 5 Atrazine           9  333.4
+## 6 Atrazine          13  749.5
+```
+
+Next let's `spread` this dataset out. YOu need to specify the `key` which is what is being spread out - in this case the `COMPOUND` and you need to specify which variable is being moved - in this case the `value` is `avgEst` the average pesticide level (we are NOT moving the LOW_ESTIMATE and HIGH_ESTIMATE).
+
+
+```r
+FL_3pest_wide <- FL_3pest %>%
+  spread(key = COMPOUND,
+         value = avgEst)
+
+dim(FL_3pest_wide)
+```
+
+```
+## [1] 67  4
+```
+
+```r
+head(FL_3pest_wide)
+```
+
+```
+## # A tibble: 6 × 4
+##   COUNTY_CODE Atrazine Glyphosate Malathion
+##         <int>    <dbl>      <dbl>     <dbl>
+## 1           1   3952.9    6189.25      31.4
+## 2           3    166.2     309.55       3.0
+## 3           5      4.4      23.85       1.0
+## 4           7    495.3     519.00       4.7
+## 5           9    333.4    4398.20     159.5
+## 6          11       NA     156.70       0.7
+```
+
+We went from 191 rows and 3 columns (`FL_3pest`) with 1 row per county and pesticide compound to 67 rows and 4 columns (`FL_3pest_wide`) with 1 row per county and 1 column for each of the 3 compounds. NOTICE that we LOST the variables `COMPOUND` and `avgEst`. This new dataset is NOT tidy, but that is ok.
+
+## Let's go back from "wide" to "long"
+
+To go back to what we had before and go from a "wide" structure to a "long" structure, we can use the `gather()` function in the `tidy` package. This time the `key` is the new variable we're creating from the columns we're collapsing into rows. The `value` is the new variable we want to name the values were collecting (i.e. `avgEst`). Then we have to list the column variables were collapsing - in this case the names of the 3 compounds.
+
+NOTE: You'll notice when we run the `dim()` command we end up with 201 rows which is more than the 191 we started with originally. This is because not every pesticide was used/measured in every county. So, there are now MISSING (NAs) for the counties in which that particular pesticide was not measured or reported.
+
+
+```r
+FL_3pest_long <- FL_3pest_wide %>%
+  gather(key = COMPOUND,
+         value = avgEst,
+         Atrazine,  
+         Glyphosate,
+         Malathion)
+
+dim(FL_3pest_long)
+```
+
+```
+## [1] 201   3
+```
+
+```r
+head(FL_3pest_long)
+```
+
+```
+## # A tibble: 6 × 3
+##   COUNTY_CODE COMPOUND avgEst
+##         <int>    <chr>  <dbl>
+## 1           1 Atrazine 3952.9
+## 2           3 Atrazine  166.2
+## 3           5 Atrazine    4.4
+## 4           7 Atrazine  495.3
+## 5           9 Atrazine  333.4
+## 6          11 Atrazine     NA
+```
+
 ## Check environment again at end
 
 Run `sessionInfo()` and `ls()` again to check your current session environment and objects loaded.
@@ -781,18 +955,25 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] maps_3.1.1          choroplethrMaps_1.0 dplyr_0.5.0        
-## [4] purrr_0.2.2.9000    readr_1.0.0         tidyr_0.6.0        
-## [7] tibble_1.2-12       ggplot2_2.2.0       tidyverse_1.0.0    
+##  [1] DiagrammeR_0.9.0    maps_3.1.1          choroplethrMaps_1.0
+##  [4] dplyr_0.5.0         purrr_0.2.2.9000    readr_1.0.0        
+##  [7] tidyr_0.6.0         tibble_1.2-12       ggplot2_2.2.0      
+## [10] tidyverse_1.0.0    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.8      knitr_1.15.1     magrittr_1.5     munsell_0.4.3   
-##  [5] colorspace_1.2-6 R6_2.1.3         highr_0.6        stringr_1.1.0   
-##  [9] plyr_1.8.4       tools_3.3.2      grid_3.3.2       gtable_0.2.0    
-## [13] DBI_0.5          htmltools_0.3.5  yaml_2.1.14      lazyeval_0.2.0  
-## [17] rprojroot_1.1    digest_0.6.10    assertthat_0.1   evaluate_0.10   
-## [21] rmarkdown_1.3    labeling_0.3     stringi_1.1.2    scales_0.4.1    
-## [25] backports_1.0.4
+##  [1] Rcpp_0.12.8        RColorBrewer_1.1-2 influenceR_0.1.0  
+##  [4] plyr_1.8.4         highr_0.6          viridis_0.3.4     
+##  [7] tools_3.3.2        digest_0.6.10      jsonlite_1.1      
+## [10] evaluate_0.10      gtable_0.2.0       rgexf_0.15.3      
+## [13] igraph_1.0.1       rstudioapi_0.6     DBI_0.5           
+## [16] yaml_2.1.14        gridExtra_2.2.1    stringr_1.1.0     
+## [19] knitr_1.15.1       htmlwidgets_0.8    rprojroot_1.1     
+## [22] grid_3.3.2         R6_2.1.3           Rook_1.1-1        
+## [25] XML_3.98-1.4       rmarkdown_1.3      magrittr_1.5      
+## [28] backports_1.0.4    scales_0.4.1       htmltools_0.3.5   
+## [31] assertthat_0.1     colorspace_1.2-6   brew_1.0-6        
+## [34] labeling_0.3       stringi_1.1.2      visNetwork_1.0.3  
+## [37] lazyeval_0.2.0     munsell_0.4.3
 ```
 
 ```r
@@ -800,9 +981,10 @@ ls()
 ```
 
 ```
-##  [1] "ag_dict"          "FL_Atrazine"      "FL_Atrazine_new" 
-##  [4] "FL_subset"        "pesticide_subset" "Pesticides"      
-##  [7] "state.regions"    "stateLevels"      "stateLevels2"    
-## [10] "states_map"
+##  [1] "ag_dict"          "FL_3pest"         "FL_3pest_long"   
+##  [4] "FL_3pest_wide"    "FL_Atrazine"      "FL_Atrazine_new" 
+##  [7] "FL_subset"        "pesticide_subset" "Pesticides"      
+## [10] "state.regions"    "stateLevels"      "stateLevels2"    
+## [13] "states_map"
 ```
 
