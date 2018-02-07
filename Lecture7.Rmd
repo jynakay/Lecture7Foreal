@@ -1,13 +1,23 @@
 ---
-title: 'N741: Lecture 7 Data and Code Wrangling'
+title: 'N741: Lesson 5 - The Grammar of Code Wrangling and the Grammar of Graphics'
 author: "Vicki Hertzberg and Melinda Higgins"
-date: "February 17, 2017"
+date: "February 14, 2018"
 output:
   html_document:
     keep_md: yes
   pdf_document: default
   word_document: default
 ---
+# _Before We Begin_
+
+Make sure that the following packages are installed from CRAN:
+
+* `choroplethrMaps`
+* `DiagrammeR`
+* `maps`
+* `NHANES`
+
+As we go along, we will load these, but for now make sure they are installed.
 
 ## Markdown Document Begins
 

@@ -1,6 +1,23 @@
-# N741: Lecture 7 Data and Code Wrangling
-Vicki Hertzberg and Melinda Higgins  
-February 17, 2017  
+---
+title: 'N741: Lesson 5 - The Grammar of Code Wrangling and the Grammar of Graphics'
+author: "Vicki Hertzberg and Melinda Higgins"
+date: "February 14, 2018"
+output:
+  html_document:
+    keep_md: yes
+  pdf_document: default
+  word_document: default
+---
+# _Before We Begin_
+
+Make sure that the following packages are installed from CRAN:
+
+* `choroplethrMaps`
+* `DiagrammeR`
+* `maps`
+* `NHANES`
+
+As we go along, we will load these, but for now make sure they are installed.
 
 ## Markdown Document Begins
 
@@ -14,9 +31,13 @@ sessionInfo()
 ```
 
 ```
-## R version 3.3.2 (2016-10-31)
-## Platform: x86_64-apple-darwin13.4.0 (64-bit)
-## Running under: OS X Yosemite 10.10.5
+## R version 3.4.3 (2017-11-30)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Sierra 10.12.6
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -25,10 +46,10 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] backports_1.0.4 magrittr_1.5    rprojroot_1.1   tools_3.3.2    
-##  [5] htmltools_0.3.5 yaml_2.1.14     Rcpp_0.12.8     stringi_1.1.2  
-##  [9] rmarkdown_1.3   knitr_1.15.1    stringr_1.1.0   digest_0.6.11  
-## [13] evaluate_0.10
+##  [1] compiler_3.4.3  backports_1.1.2 magrittr_1.5    rprojroot_1.3-2
+##  [5] tools_3.4.3     htmltools_0.3.6 yaml_2.1.16     Rcpp_0.12.15   
+##  [9] stringi_1.1.6   rmarkdown_1.8   knitr_1.19      stringr_1.2.0  
+## [13] digest_0.6.15   evaluate_0.10.1
 ```
 
 ```r
@@ -58,21 +79,20 @@ library(tidyverse)
 ```
 
 ```
-## Loading tidyverse: ggplot2
-## Loading tidyverse: tibble
-## Loading tidyverse: tidyr
-## Loading tidyverse: readr
-## Loading tidyverse: purrr
-## Loading tidyverse: dplyr
+## ── Attaching packages ────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
-## Conflicts with tidy packages ----------------------------------------------
+## ✔ ggplot2 2.2.1     ✔ purrr   0.2.4
+## ✔ tibble  1.4.2     ✔ dplyr   0.7.4
+## ✔ tidyr   0.8.0     ✔ stringr 1.2.0
+## ✔ readr   1.1.1     ✔ forcats 0.2.0
 ```
 
 ```
-## filter(): dplyr, stats
-## lag():    dplyr, stats
+## ── Conflicts ───────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
 ```
 
 ```r
@@ -81,9 +101,13 @@ sessionInfo()
 ```
 
 ```
-## R version 3.3.2 (2016-10-31)
-## Platform: x86_64-apple-darwin13.4.0 (64-bit)
-## Running under: OS X Yosemite 10.10.5
+## R version 3.4.3 (2017-11-30)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Sierra 10.12.6
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -92,20 +116,24 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] dplyr_0.5.0     purrr_0.2.2     readr_1.0.0     tidyr_0.6.1    
-## [5] tibble_1.2      ggplot2_2.2.1   tidyverse_1.1.0
+## [1] forcats_0.2.0   stringr_1.2.0   dplyr_0.7.4     purrr_0.2.4    
+## [5] readr_1.1.1     tidyr_0.8.0     tibble_1.4.2    ggplot2_2.2.1  
+## [9] tidyverse_1.2.1
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_0.12.8      plyr_1.8.4       tools_3.3.2      digest_0.6.11   
-##  [5] jsonlite_1.2     lubridate_1.6.0  evaluate_0.10    nlme_3.1-128    
-##  [9] gtable_0.2.0     lattice_0.20-34  psych_1.6.12     DBI_0.5-1       
-## [13] yaml_2.1.14      parallel_3.3.2   haven_1.0.0      xml2_1.1.1      
-## [17] stringr_1.1.0    httr_1.2.1       knitr_1.15.1     hms_0.3         
-## [21] rprojroot_1.1    grid_3.3.2       R6_2.2.0         readxl_0.1.1    
-## [25] foreign_0.8-67   rmarkdown_1.3    reshape2_1.4.2   modelr_0.1.0    
-## [29] magrittr_1.5     backports_1.0.4  scales_0.4.1     htmltools_0.3.5 
-## [33] rvest_0.3.2      assertthat_0.1   mnormt_1.5-5     colorspace_1.3-2
-## [37] stringi_1.1.2    lazyeval_0.2.0   munsell_0.4.3    broom_0.4.1
+##  [1] Rcpp_0.12.15     cellranger_1.1.0 pillar_1.1.0     compiler_3.4.3  
+##  [5] plyr_1.8.4       bindr_0.1        tools_3.4.3      digest_0.6.15   
+##  [9] lubridate_1.7.2  jsonlite_1.5     evaluate_0.10.1  nlme_3.1-131    
+## [13] gtable_0.2.0     lattice_0.20-35  pkgconfig_2.0.1  rlang_0.1.6     
+## [17] psych_1.7.8      cli_1.0.0        rstudioapi_0.7   yaml_2.1.16     
+## [21] parallel_3.4.3   haven_1.1.1      bindrcpp_0.2     xml2_1.2.0      
+## [25] httr_1.3.1       knitr_1.19       hms_0.4.1        rprojroot_1.3-2 
+## [29] grid_3.4.3       glue_1.2.0       R6_2.2.2         readxl_1.0.0    
+## [33] foreign_0.8-69   rmarkdown_1.8    modelr_0.1.1     reshape2_1.4.3  
+## [37] magrittr_1.5     backports_1.1.2  scales_0.5.0     htmltools_0.3.6 
+## [41] rvest_0.3.2      assertthat_0.2.0 mnormt_1.5-5     colorspace_1.3-2
+## [45] stringi_1.1.6    lazyeval_0.2.1   munsell_0.4.3    broom_0.4.3     
+## [49] crayon_1.3.4
 ```
 
 ```r
@@ -179,15 +207,15 @@ head(Pesticides)
 ```
 
 ```
-## # A tibble: 6 × 6
+## # A tibble: 6 x 6
 ##   COMPOUND  YEAR STATE_CODE COUNTY_CODE LOW_ESTIMATE HIGH_ESTIMATE
-##      <chr> <int>      <int>       <int>        <dbl>         <dbl>
-## 1    2_4_D  2014          1           1       1698.6        1885.5
-## 2    2_4_D  2014          1           3       7513.6        8472.4
-## 3    2_4_D  2014          1           5       2613.6        2889.4
-## 4    2_4_D  2014          1           7       1259.2        1277.7
-## 5    2_4_D  2014          1           9       7590.5        7756.1
-## 6    2_4_D  2014          1          11       1318.9        1408.5
+##   <chr>    <int>      <int>       <int>        <dbl>         <dbl>
+## 1 2_4_D     2014          1           1         1699          1886
+## 2 2_4_D     2014          1           3         7514          8472
+## 3 2_4_D     2014          1           5         2614          2889
+## 4 2_4_D     2014          1           7         1259          1278
+## 5 2_4_D     2014          1           9         7590          7756
+## 6 2_4_D     2014          1          11         1319          1408
 ```
 
 ```r
@@ -257,7 +285,7 @@ summary(Pesticides$AVG_ESTIMATE)
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
-##       0       2      22    1598     190 5507000  119027
+##       0       2      22    1598     190 5507146  119027
 ```
 
 We are going to be interested in counties in Florida and Georgia because the School of Nursing has service and research projects in the migrant farmworker communities in both states. 
@@ -370,7 +398,7 @@ summary(FL_Atrazine_new$AVG_ESTIMATE)
 
 ```
 ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-##      0.5     84.2    399.6  10700.0   1164.0 447100.0
+##      0.5     84.2    399.6  10695.9   1164.0 447108.6
 ```
  
 ## Let's make a histogram of Atrazine Use in FL in 2014
@@ -564,15 +592,15 @@ head(stateLevels)
 ```
 
 ```
-## # A tibble: 6 × 2
+## # A tibble: 6 x 2
 ##   STATE_CODE meanLevel
 ##        <int>     <dbl>
-## 1          1  616.7813
-## 2          4  733.0102
-## 3          5 2530.4443
-## 4          6 8810.5637
-## 5          8 1777.0288
-## 6          9  107.4497
+## 1          1       617
+## 2          4       733
+## 3          5      2530
+## 4          6      8811
+## 5          8      1777
+## 6          9       107
 ```
 
 **NOTE:** This newly created object `stateLevels` is a nice neat "data.frame" object (run `class(stateLevels)` to check). Guess what - `knitr::kable()` works well on these kinds of objects so we can use this to make a table. 
@@ -648,15 +676,15 @@ head(stateLevels)
 ```
 
 ```
-## # A tibble: 6 × 2
+## # A tibble: 6 x 2
 ##   fips.numeric meanLevel
 ##          <int>     <dbl>
-## 1            1  616.7813
-## 2            4  733.0102
-## 3            5 2530.4443
-## 4            6 8810.5637
-## 5            8 1777.0288
-## 6            9  107.4497
+## 1            1       617
+## 2            4       733
+## 3            5      2530
+## 4            6      8811
+## 5            8      1777
+## 6            9       107
 ```
 
 ```r
@@ -669,15 +697,15 @@ head(stateLevels2)
 ```
 
 ```
-## # A tibble: 6 × 5
-##   fips.numeric meanLevel      region   abb fips.character
-##          <int>     <dbl>       <chr> <chr>          <chr>
-## 1            1  616.7813     alabama    AL             01
-## 2            4  733.0102     arizona    AZ             04
-## 3            5 2530.4443    arkansas    AR             05
-## 4            6 8810.5637  california    CA             06
-## 5            8 1777.0288    colorado    CO             08
-## 6            9  107.4497 connecticut    CT             09
+## # A tibble: 6 x 5
+##   fips.numeric meanLevel region      abb   fips.character
+##          <int>     <dbl> <chr>       <chr> <chr>         
+## 1            1       617 alabama     AL    01            
+## 2            4       733 arizona     AZ    04            
+## 3            5      2530 arkansas    AR    05            
+## 4            6      8811 california  CA    06            
+## 5            8      1777 colorado    CO    08            
+## 6            9       107 connecticut CT    09
 ```
 
 ## Arranging (sorting) data and making a better table.
@@ -694,15 +722,15 @@ stateLevels2 %>%
 ```
 
 ```
-## # A tibble: 6 × 5
-##   fips.numeric meanLevel       region   abb fips.character
-##          <int>     <dbl>        <chr> <chr>          <chr>
-## 1            6  8810.564   california    CA             06
-## 2           53  3669.994   washington    WA             53
-## 3           38  3460.586 north dakota    ND             38
-## 4           12  3204.236      florida    FL             12
-## 5           16  3152.640        idaho    ID             16
-## 6           31  2937.926     nebraska    NE             31
+## # A tibble: 6 x 5
+##   fips.numeric meanLevel region       abb   fips.character
+##          <int>     <dbl> <chr>        <chr> <chr>         
+## 1            6      8811 california   CA    06            
+## 2           53      3670 washington   WA    53            
+## 3           38      3461 north dakota ND    38            
+## 4           12      3204 florida      FL    12            
+## 5           16      3153 idaho        ID    16            
+## 6           31      2938 nebraska     NE    31
 ```
 
 Using this approach, we'll append the `knitr::kable()` commands and make an updated table. We select the top 10 rows after the `arrange()` command by using the `slice()` command.
@@ -750,15 +778,15 @@ This Pesticide dataset is a very "long" (or "tall") dataset since this is a 3-le
 
 The figure below was generated using a cool package called `DiagrammeR`, which you can learn more about at [http://rich-iannone.github.io/DiagrammeR/index.html](http://rich-iannone.github.io/DiagrammeR/index.html). The RED circles represent states (S1, S2, S3, ...); the BLUE circles represent the counties (c1, c2, c3, ...) and the ORANGE circles represent the pesticides (p1, p2, p3, ...).
 
-<!--html_preserve--><div id="htmlwidget-b880d851d3e477e23cdb" style="width:672px;height:480px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-b880d851d3e477e23cdb">{"x":{"diagram":"\n      digraph dot {\n      \n      graph [layout = dot]\n      \n      node [shape = circle,\n      style = filled,\n      color = grey]\n      \n      node [fillcolor = red]\n      S1 S2 S3\n      \n      node [fillcolor = blue]\n      c1 c2 c3 c4 c5 c6 c7 c8\n      \n      node [fillcolor = orange]\n      \n      edge [color = grey]\n      S1 -> {c1 c2}\n      S2 -> {c3 c4 c5}\n      S3 -> {c6 c7 c8}\n      c1 -> {p1 p2 p3 p4}\n      c2 -> {p1 p2 p3 p4}\n      c3 -> {p1 p2 p3 p4}\n      c4 -> {p1 p2 p3 p4}\n      c5 -> {p1 p2 p3 p4}\n      c6 -> {p1 p2 p3 p4}\n      c7 -> {p1 p2 p3 p4}\n      c8 -> {p1 p2 p3 p4}\n      }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-cdabfb1341e6cbd9d8f1" style="width:672px;height:480px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-cdabfb1341e6cbd9d8f1">{"x":{"diagram":"\n      digraph dot {\n      \n      graph [layout = dot]\n      \n      node [shape = circle,\n      style = filled,\n      color = grey]\n      \n      node [fillcolor = red]\n      S1 S2 S3\n      \n      node [fillcolor = blue]\n      c1 c2 c3 c4 c5 c6 c7 c8\n      \n      node [fillcolor = orange]\n      \n      edge [color = grey]\n      S1 -> {c1 c2}\n      S2 -> {c3 c4 c5}\n      S3 -> {c6 c7 c8}\n      c1 -> {p1 p2 p3 p4}\n      c2 -> {p1 p2 p3 p4}\n      c3 -> {p1 p2 p3 p4}\n      c4 -> {p1 p2 p3 p4}\n      c5 -> {p1 p2 p3 p4}\n      c6 -> {p1 p2 p3 p4}\n      c7 -> {p1 p2 p3 p4}\n      c8 -> {p1 p2 p3 p4}\n      }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ### Another fun graph to visualize this
 
 The varying grey-shaded nodes represent the different pesticides.
 
-<!--html_preserve--><div id="htmlwidget-94ae4c90ec75bf05ff19" style="width:672px;height:480px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-94ae4c90ec75bf05ff19">{"x":{"diagram":"\n      digraph neato {\n      \n      graph [layout = neato]\n      \n      node [shape = circle,\n      style = filled,\n      color = grey]\n      \n      node [fillcolor = red]\n      US\n      \n      node [fillcolor = blue]\n      S1 S2 S3\n      \n      node [fillcolor = orange]\n      c1 c2 c3 c4 c5 c6 c7 c8 c9\n\n      node [fillcolor = grey41, label = \"\"]\n      p1 p6 p11 p16 p21 p26 p31 p36 p41\n\n      node [fillcolor = grey51, label = \"\"]\n      p2 p7 p12 p17 p22 p27 p32 p37 p42\n\n      node [fillcolor = grey61, label = \"\"]\n      p3 p8 p13 p18 p23 p28 p33 p38 p43\n\n      node [fillcolor = grey71, label = \"\"]\n      p4 p9 p14 p19 p24 p29 p34 p39 p44\n\n      node [fillcolor = grey81, label = \"\"]\n      p5 p10 p15 p20 p25 p30 p35 p40 p45\n\n      edge [color = grey]\n      US -> {S1 S2 S3}\n      S1 -> {c1 c2 c3}\n      S2 -> {c4 c5 c6}\n      S3 -> {c7 c8 c9}\n      c1 -> {p1 p2 p3 p4 p5}\n      c2 -> {p6 p7 p8 p9 p10}\n      c3 -> {p11 p12 p13 p14 p15}\n      c4 -> {p16 p17 p18 p19 p20}\n      c5 -> {p21 p22 p23 p24 p25}\n      c6 -> {p26 p27 p28 p29 p30}\n      c7 -> {p31 p32 p33 p34 p35}\n      c8 -> {p36 p37 p38 p39 p40}\n      c9 -> {p41 p42 p43 p44 p45}\n      }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
+<!--html_preserve--><div id="htmlwidget-ad262cebe541662730f2" style="width:672px;height:480px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ad262cebe541662730f2">{"x":{"diagram":"\n      digraph neato {\n      \n      graph [layout = neato]\n      \n      node [shape = circle,\n      style = filled,\n      color = grey]\n      \n      node [fillcolor = red]\n      US\n      \n      node [fillcolor = blue]\n      S1 S2 S3\n      \n      node [fillcolor = orange]\n      c1 c2 c3 c4 c5 c6 c7 c8 c9\n\n      node [fillcolor = grey41, label = \"\"]\n      p1 p6 p11 p16 p21 p26 p31 p36 p41\n\n      node [fillcolor = grey51, label = \"\"]\n      p2 p7 p12 p17 p22 p27 p32 p37 p42\n\n      node [fillcolor = grey61, label = \"\"]\n      p3 p8 p13 p18 p23 p28 p33 p38 p43\n\n      node [fillcolor = grey71, label = \"\"]\n      p4 p9 p14 p19 p24 p29 p34 p39 p44\n\n      node [fillcolor = grey81, label = \"\"]\n      p5 p10 p15 p20 p25 p30 p35 p40 p45\n\n      edge [color = grey]\n      US -> {S1 S2 S3}\n      S1 -> {c1 c2 c3}\n      S2 -> {c4 c5 c6}\n      S3 -> {c7 c8 c9}\n      c1 -> {p1 p2 p3 p4 p5}\n      c2 -> {p6 p7 p8 p9 p10}\n      c3 -> {p11 p12 p13 p14 p15}\n      c4 -> {p16 p17 p18 p19 p20}\n      c5 -> {p21 p22 p23 p24 p25}\n      c6 -> {p26 p27 p28 p29 p30}\n      c7 -> {p31 p32 p33 p34 p35}\n      c8 -> {p36 p37 p38 p39 p40}\n      c9 -> {p41 p42 p43 p44 p45}\n      }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><!--/html_preserve-->
 
 ## Restructure Pesticides Data from "long" to "wide"
 
@@ -820,15 +848,15 @@ head(FL_3pest)
 ```
 
 ```
-## # A tibble: 6 × 3
-##   COMPOUND COUNTY_CODE avgEst
-##      <chr>       <int>  <dbl>
-## 1 Atrazine           1 3952.9
-## 2 Atrazine           3  166.2
-## 3 Atrazine           5    4.4
-## 4 Atrazine           7  495.3
-## 5 Atrazine           9  333.4
-## 6 Atrazine          13  749.5
+## # A tibble: 6 x 3
+##   COMPOUND COUNTY_CODE  avgEst
+##   <chr>          <int>   <dbl>
+## 1 Atrazine           1 3953   
+## 2 Atrazine           3  166   
+## 3 Atrazine           5    4.40
+## 4 Atrazine           7  495   
+## 5 Atrazine           9  333   
+## 6 Atrazine          13  750
 ```
 
 Next let's `spread` this dataset out. YOu need to specify the `key` which is what is being spread out - in this case the `COMPOUND` and you need to specify which variable is being moved - in this case the `value` is `avgEst` the average pesticide level (we are NOT moving the LOW_ESTIMATE and HIGH_ESTIMATE).
@@ -851,15 +879,15 @@ head(FL_3pest_wide)
 ```
 
 ```
-## # A tibble: 6 × 4
+## # A tibble: 6 x 4
 ##   COUNTY_CODE Atrazine Glyphosate Malathion
 ##         <int>    <dbl>      <dbl>     <dbl>
-## 1           1   3952.9    6189.25      31.4
-## 2           3    166.2     309.55       3.0
-## 3           5      4.4      23.85       1.0
-## 4           7    495.3     519.00       4.7
-## 5           9    333.4    4398.20     159.5
-## 6          11       NA     156.70       0.7
+## 1           1  3953        6189      31.4  
+## 2           3   166         310       3.00 
+## 3           5     4.40       23.8     1.00 
+## 4           7   495         519       4.70 
+## 5           9   333        4398     160    
+## 6          11    NA         157       0.700
 ```
 
 We went from 191 rows and 3 columns (`FL_3pest`) with 1 row per county and pesticide compound to 67 rows and 4 columns (`FL_3pest_wide`) with 1 row per county and 1 column for each of the 3 compounds. NOTICE that we LOST the variables `COMPOUND` and `avgEst`. This new dataset is NOT tidy, but that is ok.
@@ -891,15 +919,15 @@ head(FL_3pest_long)
 ```
 
 ```
-## # A tibble: 6 × 3
-##   COUNTY_CODE COMPOUND avgEst
-##         <int>    <chr>  <dbl>
-## 1           1 Atrazine 3952.9
-## 2           3 Atrazine  166.2
-## 3           5 Atrazine    4.4
-## 4           7 Atrazine  495.3
-## 5           9 Atrazine  333.4
-## 6          11 Atrazine     NA
+## # A tibble: 6 x 3
+##   COUNTY_CODE COMPOUND  avgEst
+##         <int> <chr>      <dbl>
+## 1           1 Atrazine 3953   
+## 2           3 Atrazine  166   
+## 3           5 Atrazine    4.40
+## 4           7 Atrazine  495   
+## 5           9 Atrazine  333   
+## 6          11 Atrazine   NA
 ```
 
 ## Check environment again at end
@@ -912,9 +940,13 @@ sessionInfo()
 ```
 
 ```
-## R version 3.3.2 (2016-10-31)
-## Platform: x86_64-apple-darwin13.4.0 (64-bit)
-## Running under: OS X Yosemite 10.10.5
+## R version 3.4.3 (2017-11-30)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Sierra 10.12.6
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -923,29 +955,34 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] DiagrammeR_0.9.0      choroplethrMaps_1.0.1 dplyr_0.5.0          
-## [4] purrr_0.2.2           readr_1.0.0           tidyr_0.6.1          
-## [7] tibble_1.2            ggplot2_2.2.1         tidyverse_1.1.0      
+##  [1] DiagrammeR_0.9.2      choroplethrMaps_1.0.1 bindrcpp_0.2         
+##  [4] forcats_0.2.0         stringr_1.2.0         dplyr_0.7.4          
+##  [7] purrr_0.2.4           readr_1.1.1           tidyr_0.8.0          
+## [10] tibble_1.4.2          ggplot2_2.2.1         tidyverse_1.2.1      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rook_1.1-1         reshape2_1.4.2     haven_1.0.0       
-##  [4] lattice_0.20-34    colorspace_1.3-2   htmltools_0.3.5   
-##  [7] yaml_2.1.14        XML_3.98-1.5       foreign_0.8-67    
-## [10] DBI_0.5-1          RColorBrewer_1.1-2 modelr_0.1.0      
-## [13] readxl_0.1.1       plyr_1.8.4         stringr_1.1.0     
-## [16] munsell_0.4.3      gtable_0.2.0       rvest_0.3.2       
-## [19] visNetwork_1.0.3   htmlwidgets_0.8    psych_1.6.12      
-## [22] evaluate_0.10      labeling_0.3       knitr_1.15.1      
-## [25] parallel_3.3.2     highr_0.6          broom_0.4.1       
-## [28] Rcpp_0.12.8        scales_0.4.1       backports_1.0.4   
-## [31] jsonlite_1.2       rgexf_0.15.3       gridExtra_2.2.1   
-## [34] brew_1.0-6         mnormt_1.5-5       hms_0.3           
-## [37] digest_0.6.11      stringi_1.1.2      grid_3.3.2        
-## [40] rprojroot_1.1      influenceR_0.1.0   tools_3.3.2       
-## [43] magrittr_1.5       lazyeval_0.2.0     xml2_1.1.1        
-## [46] lubridate_1.6.0    rstudioapi_0.6     assertthat_0.1    
-## [49] rmarkdown_1.3      httr_1.2.1         viridis_0.3.4     
-## [52] R6_2.2.0           igraph_1.0.1       nlme_3.1-128
+##  [1] Rcpp_0.12.15       lubridate_1.7.2    lattice_0.20-35   
+##  [4] visNetwork_2.0.3   assertthat_0.2.0   rprojroot_1.3-2   
+##  [7] digest_0.6.15      psych_1.7.8        utf8_1.1.3        
+## [10] R6_2.2.2           cellranger_1.1.0   plyr_1.8.4        
+## [13] backports_1.1.2    evaluate_0.10.1    httr_1.3.1        
+## [16] highr_0.6          pillar_1.1.0       rlang_0.1.6       
+## [19] lazyeval_0.2.1     readxl_1.0.0       rstudioapi_0.7    
+## [22] rmarkdown_1.8      labeling_0.3       downloader_0.4    
+## [25] foreign_0.8-69     htmlwidgets_1.0    igraph_1.1.2      
+## [28] munsell_0.4.3      broom_0.4.3        compiler_3.4.3    
+## [31] influenceR_0.1.0   rgexf_0.15.3       modelr_0.1.1      
+## [34] pkgconfig_2.0.1    mnormt_1.5-5       htmltools_0.3.6   
+## [37] tidyselect_0.2.3   gridExtra_2.3      XML_3.98-1.9      
+## [40] viridisLite_0.2.0  crayon_1.3.4       grid_3.4.3        
+## [43] nlme_3.1-131       jsonlite_1.5       gtable_0.2.0      
+## [46] magrittr_1.5       scales_0.5.0       cli_1.0.0         
+## [49] stringi_1.1.6      reshape2_1.4.3     viridis_0.4.1     
+## [52] xml2_1.2.0         brew_1.0-6         RColorBrewer_1.1-2
+## [55] tools_3.4.3        glue_1.2.0         hms_0.4.1         
+## [58] Rook_1.1-1         parallel_3.4.3     yaml_2.1.16       
+## [61] colorspace_1.3-2   rvest_0.3.2        knitr_1.19        
+## [64] bindr_0.1          haven_1.1.1
 ```
 
 ```r
@@ -1269,11 +1306,11 @@ ggplot(data=sample_n(NHANES, size=1000), aes(x=Age, y=Height, color = Gender)) +
 ```
 
 ```
-## Warning: Removed 43 rows containing non-finite values (stat_smooth).
+## Warning: Removed 47 rows containing non-finite values (stat_smooth).
 ```
 
 ```
-## Warning: Removed 43 rows containing missing values (geom_point).
+## Warning: Removed 47 rows containing missing values (geom_point).
 ```
 
 ![](Lecture7_files/figure-html/unnamed-chunk-36-1.png)<!-- -->
