@@ -1,0 +1,92 @@
+---
+title: "Homework 2"
+author: "Vicki Hertzberg and Melinda Higgins"
+date: "2/14/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# *Due Date* is 21 February 2018
+
+This homework is meant to further your dplyr and ggplot2 skills. 
+
+First install the package 
+
+* `car`
+
+## Installing `car`
+
+We found some hiccups when we were designing this homework. With a little sleuthing, we were able to figure out that some of the issues related to installing the package and dependent package called `quantreg`. So before you install `car` use the following R commands:
+
+* install.packages("quantreg", dependencies=TRUE)
+* install.packages("car", dependencies=TRUE)
+
+You might get this question in the console: 
+"Do you want to install from sources the package which needs compilation"
+followed by a prompt for you to respond yes or no, which looks like
+y/n:
+
+Usually when you see this prompt in RStudio, `y` is a good default response. However when installing `quantreg` and `car`, we found that if you answered `n` to the prompts, all will work well, otherwise you will descend into R purgatory.
+
+## The Data
+
+The `Davis` dataset in the `car` package contains data on the measured and reported heights and weights of men and women engagedin regular exercise.
+
+Use tools within the `dplyr` package to answer the following questions.
+
+# Question 1: What kind of R data structure is `Davis`?
+
+# Question 2: How many observations are in the `Davis`?
+
+# Question 3: How many observations have a missing value for reported weight?
+
+# Question 4: How many observations have no missing values?
+
+
+Create a subset containing only females.
+
+# Question 5: How many females are in this subset?
+
+That last question was an opportunity for you to show-off your `dplyr` confidence. 
+
+*Now* return to the overall dataset with both males and females.
+
+Body mass index is one way to quantify the amount of tissue mass (muscle, fat, and bone) in an individual, then categorize that person as _underweight_, _normal_ _weight_, _overweight_, or _obese_ according to that value. 
+
+We calculate the BMI as the ratio of the weight in kilograms divided by the square of the height in meters, and the categorization based on BMI is as follows:
+
+         
+
+
+ Category    | BMI range (kg/m2)   
+
+ ----------- | ------------------- 
+
+ Underweight | <18.5               
+
+ Normal      | 18.5-25              
+
+ Overweight  | 25-30                
+
+ Obese       | >30                  
+
+
+
+
+
+
+Create the BMI variable then a variable to depict BMI category. Note that the height variable is in centimeters.
+
+
+
+
+
+
+
+# Question 6: What is the average BMI for these individuals?
+
+# Question 7: How do these individuals fall into the BMI categories?
+
