@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # *Due Date* is 21 February 2018
 
-This homework is meant to further your dplyr and ggplot2 skills. 
+This homework is meant to further your `dplyr` and `ggplot2` skills. 
 
 First, install the package 
 
@@ -26,8 +26,7 @@ We found some hiccups when we were designing this homework. With a little sleuth
 
 You might get this question in the console: 
 
-"Do you want to install from sources the package which needs compilation"
-followed by a prompt for you to respond yes or no, which looks like
+"Do you want to install from sources the package which needs compilation" followed by a prompt for you to respond yes or no, which looks like
 
 `y/n:`
 
@@ -35,9 +34,9 @@ Usually when you see this prompt in RStudio, `y` is a good default response. How
 
 ## The Data - `Davis` dataset in the `car` package
 
-The `Davis` dataset in the `car` package contains data on the measured and reported heights and weights of men and women engagedin regular exercise.
+The `Davis` dataset in the `car` package contains data on the measured and reported heights and weights of men and women engagedin regular exercise. _[For more information, type `?car::Davis` in the Console to bring up the HELP pages on the `Davis` dataset in the `car` package.]_
 
-Use tools within the `dplyr` package to answer the following questions.
+Use tools within the `dplyr` package as much as possible to answer the following questions.
 
 1. Question 1: What kind of R object is the `Davis` dataset?
 
@@ -57,7 +56,7 @@ That last question was an opportunity for you to show-off your `dplyr` confidenc
 
 Body mass index is one way to quantify the amount of tissue mass (muscle, fat, and bone) in an individual, then categorize that person as _underweight_, _normal_ _weight_, _overweight_, or _obese_ according to that value. 
 
-We calculate the BMI as the ratio of the weight in kilograms divided by the square of the height in meters, and the categorization based on BMI is as follows:
+We calculate the BMI as the **ratio of the weight in kilograms divided by the square of the height in meters**, and the categorization based on BMI is as follows:
 
 ### BMI Categories
 
@@ -68,7 +67,7 @@ We calculate the BMI as the ratio of the weight in kilograms divided by the squa
  Overweight  | 25-30                
  Obese       | >30                  
 
-Create the BMI variable and then a variable to depict BMI category. Note that the `height` variable is in centimeters, and `weight` is in kg. _[HINT: Type `?car::Davis` in the Console to bring up the HELP pages on the `Davis` dataset in the `car` package.]_
+Create the BMI variable and then a variable to depict BMI category. Note that the `height` variable is in centimeters, and `weight` is in kg. You need to create the BMI variable using the correct formula. 
 
 Now answer these questions:
 
