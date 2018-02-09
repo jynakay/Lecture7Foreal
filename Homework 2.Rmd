@@ -38,17 +38,21 @@ The `Davis` dataset in the `car` package contains data on the measured and repor
 
 Use tools within the `dplyr` package as much as possible to answer the following questions.
 
-1. Question 1: What kind of R object is the `Davis` dataset?
+##### **Question 1:** What kind of R object is the `Davis` dataset?
 
-2. Question 2: How many observations are in the `Davis` dataset?
+##### **Question 2:** How many observations are in the `Davis` dataset?
 
-3. Question 3: For reported weight, how many observations have a missing value?
+##### **Question 3:** For reported weight, how many observations have a missing value?
 
-4. Question 4: How many observations have no missing values? _(HINT: find complete cases)_
+##### **Question 4:** How many observations have no missing values? _(HINT: find complete cases)_
+
+---
 
 Create a subset containing only females.
 
-5. Question 5: How many females are in this subset?
+##### **Question 5:** How many females are in this subset?
+
+---
 
 That last question was an opportunity for you to show-off your `dplyr` confidence. 
 
@@ -71,7 +75,19 @@ Create the BMI variable and then a variable to depict BMI category. Note that th
 
 Now answer these questions:
 
-6. Question 6: What is the average BMI for these individuals?
+##### **Question 6:** What is the average BMI for these individuals?
 
-7. Question 7: How do these individuals fall into the BMI categories (what are the frequencies and relative %'s)?
+##### **Question 7:** How do these individuals fall into the BMI categories (what are the frequencies and relative %'s)?
+
+----
+
+## Test your graphing skills using `ggplot2`
+
+Using the `Davis` dataset from the `car` package, create the following graphics/figures.
+
+##### **Question 8:** plotting question
+
+##### **Question 9:** plotting question
+
+##### **Question 10:** plotting question
 
