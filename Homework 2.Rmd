@@ -13,11 +13,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This homework is meant to further your dplyr and ggplot2 skills. 
 
-First install the package 
+First, install the package 
 
 * `car`
 
-## Installing `car`
+## Installing the `car` package
 
 We found some hiccups when we were designing this homework. With a little sleuthing, we were able to figure out that some of the issues related to installing the package and dependent package called `quantreg`. So before you install `car` use the following R commands:
 
@@ -25,30 +25,31 @@ We found some hiccups when we were designing this homework. With a little sleuth
 * install.packages("car", dependencies=TRUE)
 
 You might get this question in the console: 
+
 "Do you want to install from sources the package which needs compilation"
 followed by a prompt for you to respond yes or no, which looks like
-y/n:
 
-Usually when you see this prompt in RStudio, `y` is a good default response. However when installing `quantreg` and `car`, we found that if you answered `n` to the prompts, all will work well, otherwise you will descend into R purgatory.
+`y/n:`
 
-## The Data
+Usually when you see this prompt in RStudio, `y` is a good default response. However when installing `quantreg` and `car`, we found that if you answered `n` to the prompts, all will work well. _(answering `y` here leads to other issues you can avoid for now... we don't want you to descend into R purgatory, LOL)_
+
+## The Data - `Davis` dataset in the `car` package
 
 The `Davis` dataset in the `car` package contains data on the measured and reported heights and weights of men and women engagedin regular exercise.
 
 Use tools within the `dplyr` package to answer the following questions.
 
-# Question 1: What kind of R data structure is `Davis`?
+1. Question 1: What kind of R object is the `Davis` dataset?
 
-# Question 2: How many observations are in the `Davis`?
+2. Question 2: How many observations are in the `Davis` dataset?
 
-# Question 3: How many observations have a missing value for reported weight?
+3. Question 3: For reported weight, how many observations have a missing value?
 
-# Question 4: How many observations have no missing values?
-
+4. Question 4: How many observations have no missing values? _(HINT: find complete cases)_
 
 Create a subset containing only females.
 
-# Question 5: How many females are in this subset?
+5. Question 5: How many females are in this subset?
 
 That last question was an opportunity for you to show-off your `dplyr` confidence. 
 
@@ -58,35 +59,20 @@ Body mass index is one way to quantify the amount of tissue mass (muscle, fat, a
 
 We calculate the BMI as the ratio of the weight in kilograms divided by the square of the height in meters, and the categorization based on BMI is as follows:
 
-         
-
+### BMI Categories
 
  Category    | BMI range (kg/m2)   
-
  ----------- | ------------------- 
-
- Underweight | <18.5               
-
+ Underweight | <18.5              
  Normal      | 18.5-25              
-
  Overweight  | 25-30                
-
  Obese       | >30                  
 
+Create the BMI variable and then a variable to depict BMI category. Note that the `height` variable is in centimeters, and `weight` is in kg. _[HINT: Type `?car::Davis` in the Console to bring up the HELP pages on the `Davis` dataset in the `car` package.]_
 
+Now answer these questions:
 
+6. Question 6: What is the average BMI for these individuals?
 
-
-
-Create the BMI variable then a variable to depict BMI category. Note that the height variable is in centimeters.
-
-
-
-
-
-
-
-# Question 6: What is the average BMI for these individuals?
-
-# Question 7: How do these individuals fall into the BMI categories?
+7. Question 7: How do these individuals fall into the BMI categories (what are the frequencies and relative %'s)?
 
