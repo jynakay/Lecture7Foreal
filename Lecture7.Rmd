@@ -196,7 +196,12 @@ dim(FL_Atrazine)
 Why don't you try this with data from the state of Georgia (with state code 13)? Specifically, the governor is interested in the amount of glyphosate (aka "Round-up") applied in 2014. How would you do this? Fill in the following R chunk. In this case, look for COMPOUND with name "Glyphosate" with a capital "G".
 
 ```{r}
-# TRY IN CLASS
+GA_Glyphosate_new <- Pesticides %>% 
+  select(COMPOUND, STATE_CODE, AVG_ESTIMATE) %>%
+  filter(STATE_CODE == 13 & COMPOUND == "Glyphosate")
+
+# run summary of this data
+summary(GA_Glyphosate_new$AVG_ESTIMATE)
 ```
 
 ## A better way - Using pipes `%>%`
